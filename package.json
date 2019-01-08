@@ -4,5 +4,16 @@
 	"version": "1.0.0",
 	"author": "Alfinity",
 	"description": "Squares Game",
-	"scripts": { }
+	"scripts": {},
+	"devDependencies": {
+		"webpack": "^4.28.1"
+	},
+	"dependencies": {
+		"body-parser": "^1.18.3",
+		"express": "^4.16.4",
+		"mongoose": "^5.4.2",
+		"pug": "^2.0.3",
+		"react": "^16.7.0",
+		"react-dom": "^16.7.0"
+	}
 }
