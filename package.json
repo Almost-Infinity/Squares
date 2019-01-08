@@ -1,0 +1,8 @@
+{
+	"private": true,
+	"name": "squares",
+	"version": "1.0.0",
+	"author": "Alfinity",
+	"description": "Squares Game",
+	"scripts": { }
+}
