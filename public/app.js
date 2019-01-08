@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 // const mongoose = require('mongoose');
 // const bodyParser = require('body-parser');
@@ -12,18 +13,17 @@ TODO:
 
 
 app.disable('x-powered-by');
-app.set('view engine', 'pug');
-app.engine('pug', require('pug').__express);
-
+app.set('view engine', 'html');
+app.use(express.static(path.resolve(__dirname)));
 
 // ====== [ Middlewares ] ======
 
 app.get('/', function (req, res) {
-	res.render('index');
+	res.sendFile(path.resolve(__dirname, 'index.html'));
 });
 
 
 
 app.listen(1337, function () {
-	console.log('Express listening on port 3000..');
+	console.log('Express listening on port 1337..');
 });
