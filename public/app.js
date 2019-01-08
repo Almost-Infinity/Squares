@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 // const mongoose = require('mongoose');
 // const bodyParser = require('body-parser');
@@ -14,7 +15,7 @@ TODO:
 app.disable('x-powered-by');
 app.set('view engine', 'pug');
 app.engine('pug', require('pug').__express);
-
+app.use(express.static(path.resolve(__dirname, 'static')));
 
 // ====== [ Middlewares ] ======
 

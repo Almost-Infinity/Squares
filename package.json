@@ -1,12 +1,16 @@
 {
 	"private": true,
 	"name": "squares",
-	"version": "1.0.0",
-	"author": "Alfinity",
-	"description": "Squares Game",
-	"scripts": {},
+	"scripts": {
+		"build-dev": "webpack -d --progress"
+	},
 	"devDependencies": {
-		"webpack": "^4.28.1"
+		"@babel/core": "^7.2.2",
+		"@babel/preset-env": "^7.2.3",
+		"@babel/preset-react": "^7.0.0",
+		"babel-loader": "^8.0.5",
+		"webpack": "^4.28.1",
+		"webpack-cli": "^3.2.1"
 	},
 	"dependencies": {
 		"body-parser": "^1.18.3",
