@@ -19,7 +19,13 @@ const htmlMinifyOpts = {
 };
 
 module.exports = {
-	entry: './source/main.js',
+	/*watch: !production,
+	watchOptions: {
+		aggregateTimeout: 300,
+		ignored: /node_modules/,
+		poll: 1000
+	},
+*/	entry: './source/main.js',
 	output: {
 		path: path.resolve(__dirname, 'public', 'assets'),
 		filename: 'app.js'
