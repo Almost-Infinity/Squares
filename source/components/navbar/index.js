@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
-import './style.sass'
+import './styles.sass'
 
 class Navbar extends Component {
 	render() {
 		return (
 			<nav>
 				<div className="nav-cont">
-					<img src="/" alt="Логитип Squares" />
+					<img src="/static/images/logo.png" alt="Логитип Squares" />
 					<ul>
 						<li>
 							<a href="/">Главная</a>
