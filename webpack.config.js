@@ -88,6 +88,13 @@ module.exports = {
 					sourceMap: !isProduction
 				}
 			}]
+		}, {
+			test: /\.(woff2?|ttf|eot|svg)$/,
+			loader: 'file-loader',
+			options: {
+				name: '[name].[ext]',
+				outputPath: 'fonts'
+			}
 		}]
 	},
 

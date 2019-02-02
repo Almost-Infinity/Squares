@@ -1,4 +1,8 @@
-@import "./_variables.sass"
+@import './_variables.sass'
+
+@font-face
+	font-family: 'Open Sans'
+	src: url('../fonts/OpenSans.ttf') format('truetype')
 
 *,
 *:after,
@@ -13,6 +17,9 @@ body
 	height: 100%
 	direction: ltr
 	background-color: $bg-color
-	font: normal normal 500 14px/1.5 'Roboto Slab', sans-serif
+	font-family: 'Open Sans', sans-serif
+	font-size: 14px
+	line-height: 1.5
+	font-style: normal
 	-webkit-font-smoothing: antialiased
 	-moz-osx-font-smoothing: grayscale
