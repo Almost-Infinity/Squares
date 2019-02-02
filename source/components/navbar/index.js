@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import './styles.sass'
+import React, { Component } from 'react';
+import './styles.sass';
 
 class Navbar extends Component {
 	render() {

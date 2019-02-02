@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
-import Navbar from '../navbar'
-import Game from '../game'
-import './styles.sass'
+import React, { Component } from 'react';
+import Navbar from '../navbar';
+import Game from '../game';
+import './styles.sass';
 
 class Layout extends Component {
 	render() {
