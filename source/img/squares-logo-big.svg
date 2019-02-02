@@ -17,7 +17,7 @@
 <g id="layer2" inkscape:groupmode="layer" inkscape:label="Layer 2">
 	<text transform="matrix(1 0 0 1 504.6816 335.7285)" class="st0 st1 st2">quares</text>
 </g>
-<path class="st3" d="M441.1,466.3h-368c-8.8,0-16-7.2-16-16v-368c0-8.8,7.2-16,16-16h368c8.8,0,16,7.2,16,16v368
-	C457.1,459.2,450,466.3,441.1,466.3z"/>
-<text transform="matrix(1.0063 0 0 1 156.2519 392)" class="st0 st1 st4">S</text>
+<path class="st3" d="M441.1,456h-368c-8.8,0-16-7.2-16-16V72c0-8.8,7.2-16,16-16h368c8.8,0,16,7.2,16,16v368
+	C457.1,448.9,450,456,441.1,456z"/>
+<text transform="matrix(1.0063 0 0 1 156.2426 376.3137)" class="st0 st1 st4">S</text>
 </svg>
