@@ -7,7 +7,7 @@ nav
 	box-shadow: $ui-light-shadow
 
 	@media only screen and (max-width: $screen-md)
-		height: 45px
+		height: 44px
 
 	.nav-cont
 		width: $page-width
@@ -38,11 +38,10 @@ nav
 					font-size: 1.35em
 					font-variant: all-small-caps
 					letter-spacing: .5px
-					transition: background-color .15s, box-shadow .15s
+					transition: text-shadow .15s
 
 					&:hover
-						background-color: rgba(0, 0, 0, .03)
-						box-shadow: 0 0 5px 1px rgba(70, 70, 70, .2) inset
+						text-shadow: 0px 0px 5px rgba(255, 255, 255, .5)
 
 					@media only screen and (max-width: $screen-md)
-						padding: 11px 20px
+						padding: 8px 20px
