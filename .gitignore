@@ -9,6 +9,11 @@ pids
 *.seed
 *.pid.lock
 
+# Build directories
+build/static/
+build/*.html
+build/*.ico
+
 # Dependency directories
 node_modules/
 
