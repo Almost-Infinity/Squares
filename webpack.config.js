@@ -56,6 +56,9 @@ module.exports = {
 				presets: [
 					'@babel/preset-env',
 					'@babel/preset-react'
+				],
+				plugins: [
+					'@babel/plugin-proposal-class-properties'
 				]
 			}
 		}, {
@@ -94,7 +97,7 @@ module.exports = {
 			loader: 'file-loader',
 			options: {
 				name: '[name].[ext]',
-				outputPath: 'fonts'
+				outputPath: isProduction ? '../fonts' : 'fonts'
 			}
 		}]
 	},

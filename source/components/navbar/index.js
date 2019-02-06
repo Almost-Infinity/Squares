@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import './styles.sass';
 
+import { AuthModalContext } from '../authModal/auth-modal-context';
+
 class Navbar extends Component {
 	render() {
 		return (
@@ -20,9 +22,13 @@ class Navbar extends Component {
 							<a href="/about">Об игре</a>
 						</li>
 
-						<li>
-							<a href="/login">Вход</a>
-						</li>
+						<AuthModalContext.Consumer>
+							{({ toggleAuthModal }) => (
+								<li>
+									<a href="javascript:void(0)" onClick={toggleAuthModal}>Вход</a>
+								</li>
+							)}
+						</AuthModalContext.Consumer>
 					</ul>
 				</div>
 			</nav>
