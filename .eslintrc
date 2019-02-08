@@ -16,13 +16,13 @@
 		"es6": true
 	},
 	"parserOptions": {
-		"ecmaVersion": 2018,
+		"ecmaVersion": 6,
 		"sourceType": "module",
 		"ecmaFeatures": {
 			"globalReturn": false,
 			"impliedStrict ": true,
 			"jsx": true
-		}
+		},
 	},
 	"rules": {
 		"no-console": "off",
