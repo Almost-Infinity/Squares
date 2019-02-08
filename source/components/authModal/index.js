@@ -22,6 +22,7 @@ class AuthModal extends Component {
 				<button className="auth-mode-tgl" disabled>Регистрация</button>
 				<button className="auth-mode-tgl" onClick={ this.toggleAuthMode }>Авторизация</button>
 				<form className="auth-input-form auth-reg-form">
+					<input className="auth-form-input" placeholder="Отображаемое имя" name="reg-name" />
 					<input className="auth-form-input" placeholder="Электронная почта" name="reg-email" />
 					<input className="auth-form-input" placeholder="Пароль" name="reg-pass" />
 					<input className="auth-form-input" placeholder="Повтор пароля" name="reg-pass-repeat" />
