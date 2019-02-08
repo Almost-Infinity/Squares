@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import $ from 'jquery';
+import Modal from '../modal';
+import { AuthModalContext } from './context';
 import './styles.sass';
 
 class AuthModal extends Component {
@@ -15,54 +16,42 @@ class AuthModal extends Component {
 		}
 	}
 
-	resize() {
-		const marginTop = $(window).height() / 2 - $('.am-window').outerHeight() / 2;
-		$('.am-window').css('margin', `${marginTop}px auto`);
-	}
-
-	componentDidMount() {
-		$(window).bind('resize', this.resize);
-	}
-
-	componentWillUnmount() {
-		$(window).unbind('resize', this.resize);
-	}
-
 	render() {
 		const RegisterComponent = (
-			<div className="am-content">
-				<button className="am-mode-tgl" disabled>Регистрация</button>
-				<button className="am-mode-tgl" onClick={this.toggleAuthMode}>Авторизация</button>
-				<form className="am-input-form am-reg-form">
-					<input className="am-form-input" placeholder="Электронная почта" name="reg-email" />
-					<input className="am-form-input" placeholder="Пароль" name="reg-pass" />
-					<input className="am-form-input" placeholder="Повтор пароля" name="reg-pass-repeat" />
-					<button className="am-form-btn">Зарегистрироваться</button>
+			<div className="auth-wrapper">
+				<button className="auth-mode-tgl" disabled>Регистрация</button>
+				<button className="auth-mode-tgl" onClick={ this.toggleAuthMode }>Авторизация</button>
+				<form className="auth-input-form auth-reg-form">
+					<input className="auth-form-input" placeholder="Электронная почта" name="reg-email" />
+					<input className="auth-form-input" placeholder="Пароль" name="reg-pass" />
+					<input className="auth-form-input" placeholder="Повтор пароля" name="reg-pass-repeat" />
+					<button className="auth-form-btn">Зарегистрироваться</button>
 				</form>
 			</div>
 		);
 
 		const AuthComponent = (
-			<div className="am-content">
-				<button className="am-mode-tgl" onClick={this.toggleAuthMode}>Регистрация</button>
-				<button className="am-mode-tgl" disabled>Авторизация</button>
-				<form className="am-input-form am-auth-form">
-					<input className="am-form-input" placeholder="Электронная почта" name="auth-email" />
-					<input className="am-form-input" placeholder="Пароль" name="auth-pass" />
-					<button className="am-form-btn">Авторизироваться</button>
+			<div className="auth-wrapper">
+				<button className="auth-mode-tgl" onClick={ this.toggleAuthMode }>Регистрация</button>
+				<button className="auth-mode-tgl" disabled>Авторизация</button>
+				<form className="auth-input-form auth-auth-form">
+					<input className="auth-form-input" placeholder="Электронная почта" name="auth-email" />
+					<input className="auth-form-input" placeholder="Пароль" name="auth-pass" />
+					<button className="auth-form-btn">Авторизироваться</button>
 				</form>
 			</div>
 		);
 
 		return (
-			<div className="am-background">
-				<div className="am-window">
-					<div className="am-header">{ this.state.authMode ? 'Регистрация' : 'Авторизация' }</div>
-					{ this.state.authMode ? RegisterComponent : AuthComponent }
-				</div>
-			</div>
+			<Modal
+				title={ this.state.authMode ? 'Регистрация' : 'Авторизация' }
+				content={ this.state.authMode ? RegisterComponent : AuthComponent }
+				close_fn={ this.context.toggleAuthModal }
+			/>
 		);
 	}
 }
+
+AuthModal.contextType = AuthModalContext;
 
 export default AuthModal;

@@ -1,0 +1,41 @@
+@import "../../sass/_variables.sass"
+
+.modal-bg
+	position: fixed
+	top: 0
+	bottom: 0
+	left: 0
+	right: 0
+	background-color: rgba(0, 0, 0, .3)
+
+	> .modal-wnd
+		overflow: auto
+		width: 350px
+		height: auto
+		margin: 0 auto
+		background-color: $white-color
+		box-shadow: $ui-light-shadow
+
+		> .modal-title-wrap
+			background-color: $green-color
+			height: 45px
+			padding-left: 10px
+
+			> .modal-title
+				display: inline-block
+				line-height: 45px
+				font-variant: all-small-caps
+				font-size: 1.5em
+				font-weight: 600
+				color: $white-color
+
+			> .modal-close
+				float: right
+				height: 45px
+				width: 45px
+				padding: 12px 15px
+				fill: $white-color
+				cursor: pointer
+
+		> .modal-content
+			padding: 10px
