@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Modal from '../modal';
+import $ from 'jquery';
 import { AuthModalContext } from './context';
 import './styles.sass';
 
@@ -13,7 +14,23 @@ class AuthModal extends Component {
 			this.setState({
 				authMode: !this.state.authMode
 			});
+			$('.auth-form-input').val('');
 		}
+
+		this.onFormSubmit = () => {
+			$.post(this.state.authMode ? '/register' : '/login', $('.auth-input-form').serialize(), data => {
+				console.log(data);
+			});
+			return false;
+		}
+	}
+
+	componentDidMount() {
+		$('.auth-input-form').bind('submit', this.onFormSubmit);
+	}
+
+	componentWillUnmount() {
+		$('.auth-input-form').unbind('submit', this.onFormSubmit);
 	}
 
 	render() {
@@ -21,7 +38,7 @@ class AuthModal extends Component {
 			<div className="auth-wrapper">
 				<button className="auth-mode-tgl" disabled>Регистрация</button>
 				<button className="auth-mode-tgl" onClick={ this.toggleAuthMode }>Авторизация</button>
-				<form className="auth-input-form auth-reg-form">
+				<form className="auth-input-form">
 					<input className="auth-form-input" placeholder="Отображаемое имя" name="reg-name" />
 					<input className="auth-form-input" placeholder="Электронная почта" name="reg-email" />
 					<input className="auth-form-input" placeholder="Пароль" name="reg-pass" />
@@ -35,7 +52,7 @@ class AuthModal extends Component {
 			<div className="auth-wrapper">
 				<button className="auth-mode-tgl" onClick={ this.toggleAuthMode }>Регистрация</button>
 				<button className="auth-mode-tgl" disabled>Авторизация</button>
-				<form className="auth-input-form auth-auth-form">
+				<form className="auth-input-form">
 					<input className="auth-form-input" placeholder="Электронная почта" name="auth-email" />
 					<input className="auth-form-input" placeholder="Пароль" name="auth-pass" />
 					<button className="auth-form-btn">Авторизироваться</button>
