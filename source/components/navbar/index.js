@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './styles.sass';
 
-import { AuthModalContext } from '../authModal/auth-modal-context';
+import { AuthModalContext } from '../authModal/context';
 
 class Navbar extends Component {
 	render() {
@@ -22,18 +22,16 @@ class Navbar extends Component {
 							<a href="/about">Об игре</a>
 						</li>
 
-						<AuthModalContext.Consumer>
-							{({ toggleAuthModal }) => (
-								<li>
-									<a href="javascript:void(0)" onClick={toggleAuthModal}>Вход</a>
-								</li>
-							)}
-						</AuthModalContext.Consumer>
+						<li>
+							<a href="javascript:void(0)" onClick={ this.context.toggleAuthModal }>Вход</a>
+						</li>
 					</ul>
 				</div>
 			</nav>
 		);
 	}
 }
+
+Navbar.contextType = AuthModalContext;
 
 export default Navbar;

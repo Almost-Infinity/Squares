@@ -4,16 +4,16 @@ import Game from '../game';
 import AuthModal from '../authModal';
 import './styles.sass';
 
-import { AuthModalContext } from '../authModal/auth-modal-context';
+import { AuthModalContext } from '../authModal/context';
 
 class Layout extends Component {
 	constructor(props) {
 		super(props);
 
 		this.toggleAuthModal = () => {
-			this.setState(state => ({
-				isAuthModalShown: !state.shown
-			}));
+			this.setState({
+				isAuthModalShown: !this.state.isAuthModalShown
+			});
 		}
 
 		this.state = {
@@ -25,7 +25,7 @@ class Layout extends Component {
 	render() {
 		return (
 			<div className="layout">
-				<AuthModalContext.Provider value={this.state}>
+				<AuthModalContext.Provider value={ this.state }>
 					{ this.state.isAuthModalShown ? <AuthModal /> : null }
 					<Navbar />
 				</AuthModalContext.Provider>
