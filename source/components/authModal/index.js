@@ -8,7 +8,10 @@ class AuthModal extends Component {
 	constructor() {
 		super();
 
-		this.state = { authMode: true }; // true - Регистрация, false - Авторизация
+		this.state = {
+			authMode: true, // true - Регистрация, false - Авторизация
+			inputError: false
+		}; 
 
 		this.toggleAuthMode = () => {
 			this.setState({
@@ -17,11 +20,14 @@ class AuthModal extends Component {
 			$('.auth-form-input').val('');
 		}
 
-		this.onFormSubmit = () => {
+		this.onFormSubmit = (event) => {
+			event.preventDefault();
+
 			$.post(this.state.authMode ? '/register' : '/login', $('.auth-input-form').serialize(), data => {
-				console.log(data);
+				this.setState({
+					inputError: data
+				});
 			});
-			return false;
 		}
 	}
 
@@ -33,9 +39,18 @@ class AuthModal extends Component {
 		$('.auth-input-form').unbind('submit', this.onFormSubmit);
 	}
 
+	componentWillUpdate() {
+		$('.auth-input-form').unbind('submit', this.onFormSubmit);
+	}
+
+	componentDidUpdate() {
+		$('.auth-input-form').bind('submit', this.onFormSubmit);
+	}
+
 	render() {
 		const RegisterComponent = (
 			<div className="auth-wrapper">
+				{ this.state.inputError ? <div className="auth-input-error">{ this.state.inputError }</div> : null }
 				<button className="auth-mode-tgl" disabled>Регистрация</button>
 				<button className="auth-mode-tgl" onClick={ this.toggleAuthMode }>Авторизация</button>
 				<form className="auth-input-form">
@@ -50,6 +65,7 @@ class AuthModal extends Component {
 
 		const AuthComponent = (
 			<div className="auth-wrapper">
+				{ this.state.inputError ? <div className="auth-input-error">{ this.state.inputError }</div> : null }
 				<button className="auth-mode-tgl" onClick={ this.toggleAuthMode }>Регистрация</button>
 				<button className="auth-mode-tgl" disabled>Авторизация</button>
 				<form className="auth-input-form">
