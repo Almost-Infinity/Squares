@@ -49,7 +49,7 @@ class AuthModal extends Component {
 
 	render() {
 		const RegisterComponent = (
-			<div className="auth-wrapper">
+			<React.Fragment>
 				{ this.state.inputError ? <div className="auth-input-error">{ this.state.inputError }</div> : null }
 				<button className="auth-mode-tgl" disabled>Регистрация</button>
 				<button className="auth-mode-tgl" onClick={ this.toggleAuthMode }>Авторизация</button>
@@ -60,11 +60,11 @@ class AuthModal extends Component {
 					<input className="auth-form-input" placeholder="Повтор пароля" name="reg-pass-repeat" />
 					<button className="auth-form-btn">Зарегистрироваться</button>
 				</form>
-			</div>
+			</React.Fragment>
 		);
 
 		const AuthComponent = (
-			<div className="auth-wrapper">
+			<React.Fragment>
 				{ this.state.inputError ? <div className="auth-input-error">{ this.state.inputError }</div> : null }
 				<button className="auth-mode-tgl" onClick={ this.toggleAuthMode }>Регистрация</button>
 				<button className="auth-mode-tgl" disabled>Авторизация</button>
@@ -73,7 +73,7 @@ class AuthModal extends Component {
 					<input className="auth-form-input" placeholder="Пароль" name="auth-pass" />
 					<button className="auth-form-btn">Авторизироваться</button>
 				</form>
-			</div>
+			</React.Fragment>
 		);
 
 		return (
