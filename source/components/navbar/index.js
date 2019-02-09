@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './styles.sass';
 
-import { AuthModalContext } from '../authModal/context';
+import { AuthModalContext } from '../auth-modal/context';
 
 class Navbar extends Component {
 	render() {

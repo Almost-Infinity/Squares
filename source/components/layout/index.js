@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import Navbar from '../navbar';
 import Game from '../game';
-import AuthModal from '../authModal';
+import AuthModal from '../auth-modal';
 import './styles.sass';
 
-import { AuthModalContext } from '../authModal/context';
+import { AuthModalContext } from '../auth-modal/context';
 
 class Layout extends Component {
 	constructor(props) {

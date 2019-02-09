@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import SquaresField from '../squaresField';
+import SquaresField from '../squares-field';
 import './styles.sass';
 
 class Game extends Component {
