@@ -35,9 +35,9 @@ class Square extends Component {
 }
 
 Square.propTypes = {
-	width: PropTypes.number,
-	height: PropTypes.number,
-	color: PropTypes.string
+	width: PropTypes.number.isRequired,
+	height: PropTypes.number.isRequired,
+	color: PropTypes.string.isRequired
 };
 
 export default Square;
