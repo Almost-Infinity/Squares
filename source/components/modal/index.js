@@ -7,21 +7,34 @@ class Modal extends Component {
 	constructor(props) {
 		super(props);
 
-		this.closeModal = () => {
-			$('.modal-bg').stop().animate({ opacity: 0 }, 150, () => {
-				this.props.close_fn();
-			});
-		}
+		this.resize = this.resize.bind(this);
+		this.closeModal = this.closeModal.bind(this);
+		this.getModalOffset = this.getModalOffset.bind(this);
+	}
+
+	getModalOffset() { // To receive valid val need calling after mount
+		return Math.max($(window).height() / 2 - $('.modal-wnd').outerHeight() / 1.3, 10);
+	}
+
+	closeModal() {
+		$('.modal-wnd').stop().animate({ marginTop: (this.getModalOffset() + 30) }, 150);
+		$('.modal-bg').stop().animate({ opacity: 0 }, 150, () => {
+			this.props.close_fn();
+		});
 	}
 
 	resize() {
-		const marginTop = Math.max($(window).height() / 2 - $('.modal-wnd').outerHeight() / 1.3, 10);
-		$('.modal-wnd').css('margin', `${marginTop}px auto`);
+		$('.modal-wnd').css('margin-top', `${this.getModalOffset()}px`);
 	}
+
 
 	componentDidMount() {
 		this.resize();
+
+		const marginTop = this.getModalOffset();
 		$('.modal-bg').css('opacity', 0).stop().animate({ opacity: 1 }, 150);
+		$('.modal-wnd').css('margin-top', `${marginTop + 30}px`).stop().animate({ marginTop: marginTop }, 150);
+
 		$(window).bind('resize', this.resize);
 	}
 
