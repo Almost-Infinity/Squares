@@ -17,10 +17,9 @@ class Modal extends Component {
 	}
 
 	closeModal() {
-		$('.modal-wnd').stop().animate({ marginTop: (this.getModalOffset() + 30) }, 150);
-		$('.modal-bg').stop().animate({ opacity: 0 }, 150, () => {
-			this.props.close_fn();
-		});
+		$('.modal-wnd').css('margin-top', '0px');
+		$('.modal-bg').removeClass('shown');
+		setTimeout(this.props.close_fn, 200);
 	}
 
 	resize() {
@@ -31,9 +30,8 @@ class Modal extends Component {
 	componentDidMount() {
 		this.resize();
 
-		const marginTop = this.getModalOffset();
-		$('.modal-bg').css('opacity', 0).stop().animate({ opacity: 1 }, 150);
-		$('.modal-wnd').css('margin-top', `${marginTop + 30}px`).stop().animate({ marginTop: marginTop }, 150);
+		$('.modal-bg').addClass('shown');
+		$('.modal-wnd').css('margin-top', `${this.getModalOffset()}px`);
 
 		$(window).bind('resize', this.resize);
 	}

@@ -8,6 +8,11 @@
 	right: 0
 	background-color: rgba(0, 0, 0, .3)
 	overflow: auto
+	opacity: 0
+	transition: opacity 200ms ease-out
+
+	&.shown
+		opacity: 1
 
 	> .modal-wnd
 		overflow: auto
@@ -16,6 +21,7 @@
 		margin: 0 auto 10px
 		background-color: $white-color
 		box-shadow: $ui-light-shadow
+		transition: margin-top 200ms ease-out
 
 		> .modal-title-wrap
 			background-color: $green-color
