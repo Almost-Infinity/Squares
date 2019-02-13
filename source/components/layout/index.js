@@ -7,14 +7,6 @@ import './styles.sass';
 
 import { AuthModalContext } from '../auth-modal/context';
 
-class Rating extends Component {
-	render() {
-		return (
-			<div>Rating</div>
-		);
-	}
-}
-
 class Layout extends Component {
 	constructor(props) {
 		super(props);
