@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import './styles.sass';
 
 import { AuthModalContext } from '../auth-modal/context';
@@ -11,7 +12,7 @@ class Navbar extends Component {
 					<img src="/static/images/logo.png" alt="Логитип Squares" />
 					<ul>
 						<li>
-							<a href="/">Главная</a>
+							<Link to="/">Главная</Link>
 						</li>
 
 						<li>

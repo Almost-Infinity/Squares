@@ -1,10 +1,19 @@
 import React, { Component } from 'react';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Navbar from '../navbar';
 import Game from '../game';
 import AuthModal from '../auth-modal';
 import './styles.sass';
 
 import { AuthModalContext } from '../auth-modal/context';
+
+class Rating extends Component {
+	render() {
+		return (
+			<div>Rating</div>
+		);
+	}
+}
 
 class Layout extends Component {
 	constructor(props) {
@@ -24,16 +33,18 @@ class Layout extends Component {
 
 	render() {
 		return (
-			<div className="layout">
-				<AuthModalContext.Provider value={ this.state }>
-					{ this.state.isAuthModalShown ? <AuthModal /> : null }
-					<Navbar />
-				</AuthModalContext.Provider>
+			<Router>
+				<div className="layout">
+					<AuthModalContext.Provider value={ this.state }>
+						{ this.state.isAuthModalShown ? <AuthModal /> : null }
+						<Navbar />
+					</AuthModalContext.Provider>
 
-				<div className="content">
-					<Game />
+					<div className="content">
+						<Route exact path="/" component={Game} />
+					</div>
 				</div>
-			</div>
+			</Router>
 		);
 	}
 }
