@@ -42,7 +42,7 @@ app.post('/register', function (req, res, next) {
 	}
 	else res.send('Hello, register!');
 	// Name and password regexp – ^[A-Za-zА-Яа-яЁё0-9-_.,()\[\]]{3,30}$
-	// Email regexp – 
+	// Email regexp –
 });
 
 app.post('/login', function (req, res, next) {
@@ -50,13 +50,13 @@ app.post('/login', function (req, res, next) {
 	res.send('Hello, login!');
 });
 
-app.get('/', function (req, res) {
+app.get('/*', function (req, res) {
 	res.sendFile(path.resolve(__dirname, 'index.html'));
 });
 
 
 
-app.listen(PORT, function () { // 
+app.listen(PORT, function () { //
 	mongoose.connect(`mongodb://${dbUser}:${dbPass}@${dbHost}:${dbPort}/${dbName}`, { useNewUrlParser: true }, (err) => {
 		if (err) throw err;
 
