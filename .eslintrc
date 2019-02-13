@@ -26,7 +26,8 @@
 	},
 	"rules": {
 		"no-console": "off",
-		"strict": ["error", "global"],
+		"no-unused-vars": [ "warn", { "vars": "all", "args": "after-used" } ],
+		"strict": [ "error", "global" ],
 		"curly": "warn"
 	}
 }
