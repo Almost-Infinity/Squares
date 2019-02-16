@@ -96,13 +96,6 @@ module.exports = {
 					sourceMap: !isProduction
 				}
 			}]
-		}, {
-			test: /\.(woff2?|ttf|eot|svg)$/,
-			loader: 'file-loader',
-			options: {
-				name: '[name].[ext]',
-				outputPath: isProduction ? '../fonts' : 'fonts'
-			}
 		}]
 	},
 
@@ -125,7 +118,7 @@ module.exports = {
 				minifyJS: true,
 				minifyCSS: true,
 				minifyURLs: true
-			} : false,
+			} : true,
 			filename: './index.html',
 			template: SOURCE_PATH + '/views/index_template.html'
 		})
