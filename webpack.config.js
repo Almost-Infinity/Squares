@@ -83,7 +83,10 @@ module.exports = {
 							},
 							stage: 3
 						}),
-						require('css-mqpacker')
+						require('css-mqpacker'),
+						require('cssnano')({
+							preset: 'default'
+						})
 					],
 					sourceMap: !isProduction
 				}
