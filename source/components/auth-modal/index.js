@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import Modal from '../modal';
 import $ from 'jquery';
 import { AuthModalContext } from './context';
@@ -9,26 +10,26 @@ class AuthModal extends Component {
 		super();
 
 		this.state = {
-			authMode: true, // true - Регистрация, false - Авторизация
-			inputError: false
-		}; 
+			authOrRestoreMode: true, // true - Авторизация, false - Восстановление парля
+			inputError: ''
+		};
 
-		this.toggleAuthMode = () => {
-			this.setState({
-				authMode: !this.state.authMode
-			});
-			$('.auth-form-input').val('');
-		}
+		this.toggleMode = this.toggleMode.bind(this);
+		this.onFormSubmit = this.onFormSubmit.bind(this);
+	}
 
-		this.onFormSubmit = (event) => {
-			event.preventDefault();
+	toggleMode() {
+		this.setState({ authOrRestoreMode: !this.state.authOrRestoreMode });
+		$('.auth-form-input').val('');
+	}
 
-			$.post(this.state.authMode ? '/register' : '/login', $('.auth-input-form').serialize(), data => {
-				this.setState({
-					inputError: data
-				});
-			});
-		}
+	onFormSubmit(event) {
+		event.preventDefault();
+		this.setState({ inputError: '' });
+
+		$.post(this.state.authOrRestoreMode ? '/login' : '/restore-password', $('.auth-input-form').serialize(), data => {
+			this.setState({ inputError: data });
+		});
 	}
 
 	componentDidMount() {
@@ -48,38 +49,34 @@ class AuthModal extends Component {
 	}
 
 	render() {
-		const RegisterComponent = (
-			<React.Fragment>
-				{ this.state.inputError ? <div className="auth-input-error">{ this.state.inputError }</div> : null }
-				<button className="auth-mode-tgl" disabled>Регистрация</button>
-				<button className="auth-mode-tgl" onClick={ this.toggleAuthMode }>Авторизация</button>
-				<form className="auth-input-form">
-					<input className="auth-form-input" placeholder="Отображаемое имя" name="reg-name" />
-					<input className="auth-form-input" placeholder="Электронная почта" name="reg-email" />
-					<input className="auth-form-input" placeholder="Пароль" name="reg-pass" />
-					<input className="auth-form-input" placeholder="Повтор пароля" name="reg-pass-repeat" />
-					<button className="auth-form-btn">Зарегистрироваться</button>
-				</form>
-			</React.Fragment>
-		);
-
 		const AuthComponent = (
 			<React.Fragment>
-				{ this.state.inputError ? <div className="auth-input-error">{ this.state.inputError }</div> : null }
-				<button className="auth-mode-tgl" onClick={ this.toggleAuthMode }>Регистрация</button>
-				<button className="auth-mode-tgl" disabled>Авторизация</button>
 				<form className="auth-input-form">
 					<input className="auth-form-input" placeholder="Электронная почта" name="auth-email" />
 					<input className="auth-form-input" placeholder="Пароль" name="auth-pass" />
 					<button className="auth-form-btn">Авторизироваться</button>
 				</form>
+				<Link className="auth-link" to="/registration" onClick={ this.context.toggleAuthModal }>Зарегистрироваться</Link>
+				<a className="auth-link" href="javascript:void(0)" onClick={ this.toggleMode }>Восстановить пароль</a>
+			</React.Fragment>
+		);
+
+		const PassRestoreComponent = (
+			<React.Fragment>
+				<form className="auth-input-form">
+					<input className="auth-form-input" placeholder="Электронная почта" name="restore-email" />
+					<button className="auth-form-btn">Отправить запрос</button>
+				</form>
+				<Link className="auth-link" to="/registration" onClick={ this.context.toggleAuthModal }>Зарегистрироваться</Link>
+				<a className="auth-link" href="javascript:void(0)" onClick={ this.toggleMode }>Авторизироваться</a>
 			</React.Fragment>
 		);
 
 		return (
 			<Modal
-				title={ this.state.authMode ? 'Регистрация' : 'Авторизация' }
-				content={ this.state.authMode ? RegisterComponent : AuthComponent }
+				title={ this.state.authOrRestoreMode ? 'Авторизация' : 'Восстановление пароля' }
+				error_msg={ this.state.inputError }
+				content={ this.state.authOrRestoreMode ? AuthComponent : PassRestoreComponent }
 				close_fn={ this.context.toggleAuthModal }
 			/>
 		);
