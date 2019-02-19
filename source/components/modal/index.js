@@ -8,18 +8,11 @@ class Modal extends Component {
 		super(props);
 
 		this.resize = this.resize.bind(this);
-		this.closeModal = this.closeModal.bind(this);
 		this.getModalOffset = this.getModalOffset.bind(this);
 	}
 
 	getModalOffset() { // To receive valid val need calling after mount
 		return Math.max($(window).height() / 2 - $('.modal-wnd').outerHeight() / 1.3, 10);
-	}
-
-	closeModal() {
-		$('.modal-wnd').css('margin-top', '0px');
-		$('.modal-bg').removeClass('shown');
-		setTimeout(this.props.close_fn, 200);
 	}
 
 	resize() {
@@ -29,10 +22,7 @@ class Modal extends Component {
 
 	componentDidMount() {
 		this.resize();
-
-		$('.modal-bg').addClass('shown');
 		$('.modal-wnd').css('margin-top', `${this.getModalOffset()}px`);
-
 		$(window).bind('resize', this.resize);
 	}
 
@@ -50,11 +40,9 @@ class Modal extends Component {
 				<div className="modal-wnd">
 					<div className="modal-title-wrap">
 						<div className="modal-title">{ this.props.title }</div>
-						<div className="modal-close" aria-label="Закрыть" onClick={ this.closeModal }>
-							<svg role="img" version="1.1" viewBox="0 0 92.265 135.47" xmlns="http://www.w3.org/2000/svg">
-								<g transform="translate(-18.124 -139.93)">
-									<path d="m24.234 161.53c-0.23462 0-0.46916 0.0898-0.64894 0.2695l-5.1921 5.1921c-0.35955 0.35955-0.35955 0.93832 0 1.2979l39.373 39.373-39.373 39.373c-0.35955 0.35955-0.35955 0.93832 0 1.2979l5.1921 5.1921c0.35955 0.35954 0.93832 0.35954 1.2979 0l39.373-39.373 39.373 39.373c0.35955 0.35954 0.93833 0.35954 1.2979 0l5.1921-5.1921c0.35956-0.35954 0.35956-0.93831 0-1.2979l-39.373-39.373 39.373-39.373c0.35956-0.35955 0.35956-0.93832 0-1.2979l-5.1921-5.1921c-0.35954-0.35955-0.93832-0.35955-1.2979 0l-39.373 39.373-39.373-39.373c-0.17978-0.17978-0.41432-0.2695-0.64894-0.2695z" />
-								</g>
+						<div className="modal-close" aria-label="Закрыть" onClick={ this.props.close_fn }>
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 91.017 91.017">
+								<path d="M7.155 0a.791.791 0 0 0-.56.234L.232 6.594a.792.792 0 0 0 0 1.123l37.792 37.792L.233 83.3a.792.792 0 0 0 0 1.122l6.361 6.361c.311.311.812.311 1.123 0l37.791-37.791L83.3 90.784c.311.311.812.311 1.123 0l6.361-6.36a.792.792 0 0 0 0-1.123L52.992 45.509 90.784 7.717a.792.792 0 0 0 0-1.123L84.423.234a.792.792 0 0 0-1.123 0L45.508 38.025 7.717.234A.793.793 0 0 0 7.155 0z"/>
 							</svg>
 						</div>
 					</div>
