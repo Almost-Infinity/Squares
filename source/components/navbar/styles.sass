@@ -9,25 +9,67 @@ nav
 	@media only screen and (max-width: $screen-md)
 		height: 44px
 
-	.nav-cont
+	> .nav-cont
 		width: $page-width
 		height: 100%
 		margin: 0 auto
 
-		img
+		@media only screen and (max-width: $screen-tablet)
+			width: 100%
+			margin: 0
+			position: relative
+
+		> img
 			display: inline-block
 			height: 100%
 			padding: 5px 0
 
-		ul
+			@media only screen and (max-width: $screen-tablet)
+				display: block
+				margin: 0 auto
+				position: absolute
+				left: 50%
+				transform: translateX(-50%)
+
+		> .nav-sidebar-overlay
+			position: fixed
+			top: 0
+			bottom: 0
+			left: 0
+			right: 0
+			background-color: rgba(0, 0, 0, .2)
+			z-index: 1
+
+		> ul
 			margin: 0
 			padding: 0
 			height: 100%
 			float: right
 			list-style: none
+			z-index: 2
+
+			@media only screen and (max-width: $screen-tablet)
+				position: fixed
+				top: 0
+				bottom: 0
+				left: -200px
+				width: 200px
+				background-color: #eee
+				box-shadow: 0 3px 3px rgba(0, 0, 0, .12), 0 3px 2px rgba(0, 0, 0, .24)
+				transition: left 150ms ease-out
+
+				&.shown
+					left: 0
 
 			li
 				float: left
+
+				@media only screen and (max-width: $screen-tablet)
+					width: 100%
+					transition: background-color 100ms ease-in
+
+					&:hover
+						background-color: rgba(0, 0, 0, .1)
 
 				a
 					display: block
@@ -45,3 +87,17 @@ nav
 
 					@media only screen and (max-width: $screen-md)
 						padding: 8px 20px
+
+					@media only screen and (max-width: $screen-tablet)
+						color: #333
+
+		> .nav-hamburger-wrap
+			height: 100%
+			width: 44px
+			position: relative
+			cursor: pointer
+
+			> .nav-hamburger
+				user-select: none
+				fill: $light-text-color
+				cursor: pointer
