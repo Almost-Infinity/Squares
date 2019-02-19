@@ -46,7 +46,10 @@ class Modal extends Component {
 							</svg>
 						</div>
 					</div>
-					<div className="modal-content">{ this.props.content }</div>
+					<div className="modal-content">
+						{ this.props.error_msg !== '' ? <div className="auth-input-error">{ this.props.error_msg }</div> : null }
+						{ this.props.content }
+					</div>
 				</div>
 			</div>
 		);
@@ -55,6 +58,7 @@ class Modal extends Component {
 
 Modal.propTypes = {
 	title: PropTypes.string.isRequired,
+	error_msg: PropTypes.string,
 	content: PropTypes.element.isRequired,
 	close_fn: PropTypes.func.isRequired
 };
