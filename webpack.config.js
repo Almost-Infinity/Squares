@@ -64,37 +64,54 @@ module.exports = {
 			}
 		}, {
 			test: /\.(s(a|c)ss)$/,
+			use: [
+				isProduction ? MiniCssExtractPlugin.loader : 'style-loader',
+				{
+					loader: 'css-loader',
+					options: {
+						sourceMap: !isProduction
+					}
+				}, {
+					loader: 'postcss-loader',
+					options: {
+						ident: 'postcss',
+						plugins: () => [
+							require('postcss-flexbugs-fixes'),
+							require('postcss-preset-env')({
+								autoprefixer: {
+									flexbox: 'no-2009',
+								},
+								stage: 3
+							}),
+							require('css-mqpacker'),
+							require('cssnano')({
+								preset: 'default'
+							})
+						],
+						sourceMap: !isProduction
+					}
+				}, {
+					loader: 'sass-loader',
+					options: {
+						sourceMap: !isProduction
+					}
+				}
+			]
+		}, {
+			test: /\.(png|jpeg?|svg|gif)$/,
 			use: [{
-				loader: isProduction ? MiniCssExtractPlugin.loader : 'style-loader',
-			}, {
-				loader: 'css-loader',
+				loader: 'file-loader',
 				options: {
-					sourceMap: !isProduction
-				}
+					outputPath: '/static/images/'
+				},
 			}, {
-				loader: 'postcss-loader',
+				loader: 'image-webpack-loader',
 				options: {
-					ident: 'postcss',
-					plugins: () => [
-						require('postcss-flexbugs-fixes'),
-						require('postcss-preset-env')({
-							autoprefixer: {
-								flexbox: 'no-2009',
-							},
-							stage: 3
-						}),
-						require('css-mqpacker'),
-						require('cssnano')({
-							preset: 'default'
-						})
-					],
-					sourceMap: !isProduction
-				}
-			}, {
-				loader: 'sass-loader',
-				options: {
-					sourceMap: !isProduction
-				}
+					mozjpeg: { progressive: true, quality: 65 },
+					optipng: { enabled: false },
+					pngquant: { quality: '65-90', speed: 4 },
+					gifsicle: { interlaced: false }
+				},
 			}]
 		}]
 	},
