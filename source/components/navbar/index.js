@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import $ from 'jquery';
 import { Link } from 'react-router-dom';
 import './styles.sass';
+import squaresLogo from '../../img/squares-logo.png';
 
 import { AppContext } from '../../App-context';
 import { AuthModalContext } from '../auth-modal/context';
@@ -23,11 +24,25 @@ class Navbar extends Component {
 		$('.nav-cont > ul').toggleClass('shown');
 	}
 
+	componentDidMount() {
+		document.querySelectorAll('.nav-cont ul a').forEach((el) => {
+			el.addEventListener('click', this.toggleMobileSidebar);
+		});
+	}
+
+	componentWillUnmount() {
+		document.querySelectorAll('.nav-cont ul a').forEach((el) => {
+			el.removeEventListener('click', this.toggleMobileSidebar);
+		});
+	}
+
 	render() {
 		return (
 			<nav>
 				<div className="nav-cont">
-					<img src="/static/images/logo.png" alt="Логотип Squares" />
+					<Link to="/">
+						<img src={squaresLogo} alt="Логотип Squares" />
+					</Link>
 					<ul>
 						<li><Link to="/">Главная</Link></li>
 						<li><Link to="/rating">Рейтинг</Link></li>
