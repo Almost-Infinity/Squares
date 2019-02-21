@@ -8,6 +8,7 @@ class Modal extends Component {
 		super(props);
 
 		this.resize = this.resize.bind(this);
+		this.onEscapePressed = this.onEscapePressed.bind(this);
 		this.getModalOffset = this.getModalOffset.bind(this);
 	}
 
@@ -19,15 +20,22 @@ class Modal extends Component {
 		$('.modal-wnd').css('margin-top', `${this.getModalOffset()}px`);
 	}
 
+	onEscapePressed(e) {
+		if (e.keyCode === 27) {
+			this.props.close_fn();
+		}
+	}
 
 	componentDidMount() {
 		this.resize();
 		$('.modal-wnd').css('margin-top', `${this.getModalOffset()}px`);
 		$(window).bind('resize', this.resize);
+		$(window).bind('keydown', this.onEscapePressed);
 	}
 
 	componentWillUnmount() {
 		$(window).unbind('resize', this.resize);
+		$(window).unbind('keydown', this.onEscapePressed);
 	}
 
 	componentDidUpdate() {
