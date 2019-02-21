@@ -100,7 +100,7 @@ module.exports = {
 		}, {
 			test: /\.(png|jpeg?|svg|gif)$/,
 			use: [{
-				loader: 'file-loader',
+				loader: isProduction ? 'file-loader' : 'url-loader',
 				options: {
 					outputPath: '/static/images/'
 				},
