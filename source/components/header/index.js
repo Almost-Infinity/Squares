@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
-import $ from 'jquery';
 import { Link } from 'react-router-dom';
+import $ from 'jquery';
 import './styles.sass';
-import squaresLogo from '../../img/squares-logo.png';
 
 import { AppContext } from '../../App-context';
 import { AuthModalContext } from '../auth-modal/context';
 
-class Navbar extends Component {
+class Header extends Component {
 	constructor() {
 		super();
 
@@ -38,21 +37,26 @@ class Navbar extends Component {
 
 	render() {
 		return (
-			<nav>
-				<div className="nav-cont">
-					<Link to="/">
-						<img src={squaresLogo} alt="Логотип Squares" />
-					</Link>
-					<ul>
-						<li><Link to="/">Главная</Link></li>
-						<li><Link to="/rating">Рейтинг</Link></li>
-						<li><Link to="/about">Об игре</Link></li>
-						<li>
-							<AuthModalContext.Consumer>
-								{ ({ toggleAuthModal }) => <a href="javascript:void(0)" onClick={ toggleAuthModal }>Вход</a> }
-							</AuthModalContext.Consumer>
-						</li>
-					</ul>
+			<header>
+				<div className="header-inner">
+					<div className="header-left">
+						<div className="header-logo">
+							<Link to="/"></Link>
+						</div>
+						<nav>
+							<ul>
+								<li><Link to="/rating">Рейтинг</Link></li>
+								<li><Link to="/about">Об игре</Link></li>
+							</ul>
+						</nav>
+					</div>
+					<div className="header-middle"></div>
+					<div className="header-right">
+						<AuthModalContext.Consumer>
+							{ ({ toggleAuthModal }) => <a href="javascript:void(0)" className="header-login" onClick={ toggleAuthModal }>Вход</a> }
+						</AuthModalContext.Consumer>
+						<Link to="/registration" className="header-reg">Регистрация</Link>
+					</div>
 					{ this.context.isMobile ? (
 						<React.Fragment>
 							{ this.state.isSidebarShown ? <div className="nav-sidebar-overlay" onClick={ this.toggleMobileSidebar }></div> : null }
@@ -64,11 +68,11 @@ class Navbar extends Component {
 						</React.Fragment>
 					) : null }
 				</div>
-			</nav>
+			</header>
 		);
 	}
 }
 
-Navbar.contextType = AppContext;
+Header.contextType = AppContext;
 
-export default Navbar;
+export default Header;
