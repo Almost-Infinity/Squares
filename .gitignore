@@ -47,3 +47,4 @@ $RECYCLE.BIN/
 # Workspace files are user-specific
 *.sublime-workspace
 *.sublime-project
+.vscode/
