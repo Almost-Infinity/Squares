@@ -5,6 +5,7 @@ const webpack = require('webpack');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 const isProduction = (process.env.NODE_ENV === 'production');
 
@@ -23,9 +24,8 @@ module.exports = {
 	},
 
 	devServer: {
-		contentBase: path.join(__dirname, 'build'),
+		contentBase: BUILD_PATH,
 		compress: true,
-		// host: '127.0.0.1',
 		host: '0.0.0.0',
 		port: 1337,
 		hot: true
@@ -35,7 +35,10 @@ module.exports = {
 		splitChunks: {
 			chunks: 'all'
 		},
-		runtimeChunk: true
+		runtimeChunk: true,
+		namedModules: !isProduction,
+		moduleIds: isProduction ? 'hashed' : 'named',
+		mangleWasmImports: isProduction
 	},
 
 	module: {
@@ -85,7 +88,11 @@ module.exports = {
 							}),
 							require('css-mqpacker'),
 							require('cssnano')({
-								preset: 'default'
+								preset: [ 'advanced', {
+									autoprefixer: false,
+									zindex: false,
+									cssDeclarationSorter: isProduction
+								}],
 							})
 						],
 						sourceMap: !isProduction
@@ -138,6 +145,10 @@ module.exports = {
 			} : true,
 			filename: './index.html',
 			template: SOURCE_PATH + '/views/index_template.html'
+		}),
+		new CleanWebpackPlugin([ 'static', '*.html' ], {
+			root: BUILD_PATH,
+			verbose: false
 		})
 	]
 };
