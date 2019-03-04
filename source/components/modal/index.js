@@ -10,6 +10,7 @@ class Modal extends Component {
 		this.resize = this.resize.bind(this);
 		this.onEscapePressed = this.onEscapePressed.bind(this);
 		this.getModalOffset = this.getModalOffset.bind(this);
+		this.onClickBackground = this.onClickBackground.bind(this);
 	}
 
 	getModalOffset() { // To receive valid val need calling after mount
@@ -22,6 +23,12 @@ class Modal extends Component {
 
 	onEscapePressed(e) {
 		if (e.keyCode === 27) {
+			this.props.close_fn();
+		}
+	}
+
+	onClickBackground(e) {
+		if (e.target.classList.value === 'modal-bg') {
 			this.props.close_fn();
 		}
 	}
@@ -44,14 +51,16 @@ class Modal extends Component {
 
 	render() {
 		return (
-			<div className="modal-bg">
+			<div className="modal-bg" onClick={ this.onClickBackground }>
 				<div className="modal-wnd">
-					<div className="modal-title-wrap">
-						<div className="modal-title">{ this.props.title }</div>
-						<div className="modal-close" aria-label="Закрыть" onClick={ this.props.close_fn }>
-							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 91.017 91.017">
-								<path d="M7.155 0a.791.791 0 0 0-.56.234L.232 6.594a.792.792 0 0 0 0 1.123l37.792 37.792L.233 83.3a.792.792 0 0 0 0 1.122l6.361 6.361c.311.311.812.311 1.123 0l37.791-37.791L83.3 90.784c.311.311.812.311 1.123 0l6.361-6.36a.792.792 0 0 0 0-1.123L52.992 45.509 90.784 7.717a.792.792 0 0 0 0-1.123L84.423.234a.792.792 0 0 0-1.123 0L45.508 38.025 7.717.234A.793.793 0 0 0 7.155 0z"/>
-							</svg>
+					<div className="modal-header">
+						<div className="modal-title">
+							{ this.props.title }
+							<div className="modal-close" aria-label="Закрыть" onClick={ this.props.close_fn }>
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 91.017 91.017">
+									<path d="M7.155 0a.791.791 0 0 0-.56.234L.232 6.594a.792.792 0 0 0 0 1.123l37.792 37.792L.233 83.3a.792.792 0 0 0 0 1.122l6.361 6.361c.311.311.812.311 1.123 0l37.791-37.791L83.3 90.784c.311.311.812.311 1.123 0l6.361-6.36a.792.792 0 0 0 0-1.123L52.992 45.509 90.784 7.717a.792.792 0 0 0 0-1.123L84.423.234a.792.792 0 0 0-1.123 0L45.508 38.025 7.717.234A.793.793 0 0 0 7.155 0z"/>
+								</svg>
+							</div>
 						</div>
 					</div>
 					<div className="modal-content">
