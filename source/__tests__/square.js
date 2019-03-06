@@ -1,5 +1,6 @@
 import React from 'react';
-import { shallow, mount, render } from 'enzyme';
+import { shallow } from 'enzyme';
+import { describe, it, expect } from 'jest';
 
 import Square from '../components/squares-field/square';
 

@@ -4,30 +4,40 @@ import Modal from '../modal';
 import $ from 'jquery';
 import './styles.sass';
 
-class AuthModal extends Component {
+export default class AuthModal extends Component {
+	static propTypes = {
+		toggleAuthModal: PropTypes.func.isRequired
+	};
+
+	state = {
+		authOrRestoreMode: true, // true - Авторизация, false - Восстановление парля
+		inputError: ''
+	};
+
 	constructor(props) {
 		super(props);
-
-		this.state = {
-			authOrRestoreMode: true, // true - Авторизация, false - Восстановление парля
-			inputError: ''
-		};
 
 		this.toggleMode = this.toggleMode.bind(this);
 		this.onFormSubmit = this.onFormSubmit.bind(this);
 	}
 
 	toggleMode() {
-		this.setState({ authOrRestoreMode: !this.state.authOrRestoreMode });
+		this.setState({
+			authOrRestoreMode: !this.state.authOrRestoreMode
+		});
 		$('.auth-input').val('');
 	}
 
 	onFormSubmit(event) {
 		event.preventDefault();
-		this.setState({ inputError: '' });
+		this.setState({
+			inputError: ''
+		});
 
 		$.post(this.state.authOrRestoreMode ? '/login' : '/restore-password', $('.auth-input').serialize(), data => {
-			this.setState({ inputError: data });
+			this.setState({
+				inputError: data
+			});
 		});
 	}
 
@@ -74,11 +84,13 @@ class AuthModal extends Component {
 
 		const PassRestoreComponent = (
 			<React.Fragment>
-				<form className="auth-input">
-					<input className="auth-input" placeholder="Электронная почта" name="restore-email" />
-					<button className="auth-form-btn">Отправить запрос</button>
+				<form className="auth-form clearfix">
+					<label className="auth-input-label">
+						Электронная почта
+						<input className="auth-input" name="restore-email" />
+					</label>
+					<button className="auth-submit">Отправить запрос</button>
 				</form>
-				<a className="auth-link" href="javascript:void(0)" onClick={ this.toggleMode }>Авторизироваться</a>
 			</React.Fragment>
 		);
 
@@ -92,9 +104,3 @@ class AuthModal extends Component {
 		);
 	}
 }
-
-AuthModal.propTypes = {
-	toggleAuthModal: PropTypes.func.isRequired
-};
-
-export default AuthModal;

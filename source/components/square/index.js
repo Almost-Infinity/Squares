@@ -2,7 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './styles.sass';
 
-class Square extends Component {
+export default class Square extends Component {
+	static propTypes = {
+		width: PropTypes.number.isRequired,
+		height: PropTypes.number.isRequired,
+		color: PropTypes.string.isRequired
+	};
+
 	constructor(props) {
 		super(props);
 	}
@@ -27,17 +33,19 @@ class Square extends Component {
 	render() {
 		return (
 			<svg className="square" version="1.1" xmlns="http://www.w3.org/2000/svg" width={ `${this.props.width}` } height={ `${this.props.height}` }>
-				<rect width={ `${this.props.width}` } height={ `${this.props.height}` } fill="transparent" strokeWidth="2" stroke={ this.props.color } />
-				<path strokeWidth="1" stroke={ this.props.color } d={ this.pathGenerator(this.props.width, this.props.height) } />
+				<rect
+					width={ `${this.props.width}` }
+					height={ `${this.props.height}` }
+					fill="transparent"
+					strokeWidth="2"
+					stroke={ this.props.color }
+				/>
+				<path
+					strokeWidth="1"
+					stroke={ this.props.color }
+					d={ this.pathGenerator(this.props.width, this.props.height) }
+				/>
 			</svg>
 		);
 	}
 }
-
-Square.propTypes = {
-	width: PropTypes.number.isRequired,
-	height: PropTypes.number.isRequired,
-	color: PropTypes.string.isRequired
-};
-
-export default Square;

@@ -1,21 +1,30 @@
 @import './_variables.sass'
 
+.clearfix::after
+	content: ''
+	clear: both
+	display: table
+
 *,
-*:after,
-*:before
+*::after,
+*::before
+	margin: 0
+	padding: 0
 	box-sizing: border-box
 	outline: none
 
 html,
 body
-	margin: 0
-	padding: 0
-	height: 100%
 	direction: ltr
-	background-color: $bg-color
-	font-family: 'Open Sans', sans-serif
-	font-size: 14px
-	line-height: 1.5
-	font-style: normal
+	background-color: $COLOR_BG
+	font: normal normal 400 14px/1.5 'Open Sans' sans-serif
 	-webkit-font-smoothing: antialiased
 	-moz-osx-font-smoothing: grayscale
+
+
+.content
+	width: $UI_PAGE_WIDTH
+	margin: 1em auto
+	padding: 10px
+	box-shadow: $UI_SHADOW_LIGHT
+	background-color: $COLOR_WHITE

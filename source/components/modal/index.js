@@ -3,21 +3,28 @@ import PropTypes from 'prop-types';
 import $ from 'jquery';
 import './styles.sass';
 
-class Modal extends Component {
+export default class Modal extends Component {
+	static propTypes = {
+		title: PropTypes.string.isRequired,
+		error_msg: PropTypes.string,
+		content: PropTypes.element.isRequired,
+		close_fn: PropTypes.func.isRequired
+	};
+
 	constructor(props) {
 		super(props);
 
-		this.resize = this.resize.bind(this);
+		this.onWindowResize = this.onWindowResize.bind(this);
 		this.onEscapePressed = this.onEscapePressed.bind(this);
 		this.getModalOffset = this.getModalOffset.bind(this);
 		this.onClickBackground = this.onClickBackground.bind(this);
 	}
 
-	getModalOffset() { // To receive valid val need calling after mount
+	getModalOffset() { // To receive valid value need calling after mount
 		return Math.max($(window).height() / 2 - $('.modal-wnd').outerHeight() / 1.3, 10);
 	}
 
-	resize() {
+	onWindowResize() {
 		$('.modal-wnd').css('margin-top', `${this.getModalOffset()}px`);
 	}
 
@@ -34,19 +41,19 @@ class Modal extends Component {
 	}
 
 	componentDidMount() {
-		this.resize();
+		this.onWindowResize();
 		$('.modal-wnd').css('margin-top', `${this.getModalOffset()}px`);
-		$(window).bind('resize', this.resize);
+		$(window).bind('resize', this.onWindowResize);
 		$(window).bind('keydown', this.onEscapePressed);
 	}
 
 	componentWillUnmount() {
-		$(window).unbind('resize', this.resize);
+		$(window).unbind('resize', this.onWindowResize);
 		$(window).unbind('keydown', this.onEscapePressed);
 	}
 
 	componentDidUpdate() {
-		this.resize();
+		this.onWindowResize();
 	}
 
 	render() {
@@ -64,7 +71,11 @@ class Modal extends Component {
 						</div>
 					</div>
 					<div className="modal-content">
-						{ this.props.error_msg !== '' ? <div className="auth-input-error">{ this.props.error_msg }</div> : null }
+						{ 
+							this.props.error_msg !== ''
+								? <div className="auth-input-error">{ this.props.error_msg }</div>
+								: null
+						}
 						{ this.props.content }
 					</div>
 				</div>
@@ -72,12 +83,3 @@ class Modal extends Component {
 		);
 	}
 }
-
-Modal.propTypes = {
-	title: PropTypes.string.isRequired,
-	error_msg: PropTypes.string,
-	content: PropTypes.element.isRequired,
-	close_fn: PropTypes.func.isRequired
-};
-
-export default Modal;

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './styles.sass';
 
-class SquaresField extends Component {
+export default  class SquaresField extends Component {
 	render() {
 		return (
 			<div className="squares-field">
@@ -10,8 +10,6 @@ class SquaresField extends Component {
 		);
 	}
 }
-
-export default SquaresField;
 
 /*
 <Square width={128} height={128} color="#333" />

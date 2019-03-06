@@ -1,18 +1,24 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import $ from 'jquery';
 import './styles.sass';
 
 import { AppContext } from '../../App-context';
-import { AuthModalContext } from '../auth-modal/context';
 
-class Header extends Component {
+export default class Header extends Component {
+	static propTypes = {
+		toggleAuthModal: PropTypes.func.isRequired
+	};
+
+	static contextType = AppContext;
+
+	state = {
+		isSidebarShown: false
+	};
+
 	constructor() {
 		super();
-
-		this.state = {
-			isSidebarShown: false
-		};
 
 		this.toggleMobileSidebar = this.toggleMobileSidebar.bind(this);
 	}
@@ -36,6 +42,8 @@ class Header extends Component {
 	}
 
 	render() {
+		const { toggleAuthModal } = this.props;
+
 		return (
 			<header>
 				<div className="header-inner">
@@ -52,27 +60,27 @@ class Header extends Component {
 					</div>
 					<div className="header-middle"></div>
 					<div className="header-right">
-						<AuthModalContext.Consumer>
-							{ ({ toggleAuthModal }) => <a href="javascript:void(0)" className="header-login" onClick={ toggleAuthModal }>Вход</a> }
-						</AuthModalContext.Consumer>
-						<Link to="/registration" className="header-reg">Регистрация</Link>
+						<a role="button" className="header-login" href="javascript:void(0)" onClick={ toggleAuthModal }>Вход</a>
+						<Link role="button" to="/registration" className="header-reg">Регистрация</Link>
 					</div>
-					{ this.context.isMobile ? (
-						<React.Fragment>
-							{ this.state.isSidebarShown ? <div className="nav-sidebar-overlay" onClick={ this.toggleMobileSidebar }></div> : null }
-							<div className="nav-hamburger-wrap" onClick={ this.toggleMobileSidebar }>
-								<svg className="nav-hamburger" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-									<path d="M426 276H86c-2.8 0-5-2.2-5-5v-30c0-2.8 2.2-5 5-5h340c2.8 0 5 2.2 5 5v30c0 2.8-2.2 5-5 5zm0 100H86c-2.8 0-5-2.2-5-5v-30c0-2.8 2.2-5 5-5h340c2.8 0 5 2.2 5 5v30c0 2.8-2.2 5-5 5zm0-200H86c-2.8 0-5-2.2-5-5v-30c0-2.8 2.2-5 5-5h340c2.8 0 5 2.2 5 5v30c0 2.8-2.2 5-5 5z" />
-								</svg>
-							</div>
-						</React.Fragment>
-					) : null }
+					{ 
+						this.context.isMobile
+							? <React.Fragment>
+								{
+									this.state.isSidebarShown
+										? <div className="nav-sidebar-overlay" onClick={ this.toggleMobileSidebar }></div>
+										: null
+								}
+								<div className="nav-hamburger-wrap" onClick={ this.toggleMobileSidebar }>
+									<svg className="nav-hamburger" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+										<path d="M426 276H86c-2.8 0-5-2.2-5-5v-30c0-2.8 2.2-5 5-5h340c2.8 0 5 2.2 5 5v30c0 2.8-2.2 5-5 5zm0 100H86c-2.8 0-5-2.2-5-5v-30c0-2.8 2.2-5 5-5h340c2.8 0 5 2.2 5 5v30c0 2.8-2.2 5-5 5zm0-200H86c-2.8 0-5-2.2-5-5v-30c0-2.8 2.2-5 5-5h340c2.8 0 5 2.2 5 5v30c0 2.8-2.2 5-5 5z" />
+									</svg>
+								</div>
+							</React.Fragment>
+							: null
+					}
 				</div>
 			</header>
 		);
 	}
 }
-
-Header.contextType = AppContext;
-
-export default Header;

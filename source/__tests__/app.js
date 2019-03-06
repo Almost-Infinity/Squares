@@ -1,11 +1,11 @@
 import React from 'react';
-import { shallow, mount, render } from 'enzyme';
+import { shallow } from 'enzyme';
 
 import App from '../App';
-import Layout from '../components/layout';
+import Header from '../components/header';
 
 describe('App component', () => {
 	it('should render without throwing an error', () => {
-		expect(shallow(<App />).contains(<Layout />)).toBe(true);
+		expect(shallow(<App />).contains(<Header toggleAuthModal={() => {}} />)).toBe(true);
 	});
 });

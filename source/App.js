@@ -1,20 +1,40 @@
 import React, { Component } from 'react';
-import Layout from './components/layout';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import Header from './components/header';
+import Game from './components/game';
+import Registration from './components/registration';
+import AuthModal from './components/auth-modal';
 import { AppContext } from './App-context';
 
-class App extends Component {
+export default class App extends Component {
+	state = {
+		wndWidth: 0,
+		wndHeight: 0,
+		isMobile: false,
+		isAuthModalShown: false
+	};
+
 	constructor() {
 		super();
 
-		this.state = {
-			wndWidth: 0,
-			wndHeight: 0,
-			isMobile: false
-		};
-
 		this.onWndResize = this.onWndResize.bind(this);
+		this.toggleAuthModal = this.toggleAuthModal.bind(this);
 	}
 
+
+	// ============================
+	// Methods
+	// ============================
+	toggleAuthModal() {
+		this.setState({
+			isAuthModalShown: !this.state.isAuthModalShown
+		});
+	}
+
+
+	// ============================
+	// Events
+	// ============================
 	componentDidMount() {
 		this.onWndResize();
 		window.addEventListener('resize', this.onWndResize);
@@ -35,10 +55,18 @@ class App extends Component {
 	render() {
 		return (
 			<AppContext.Provider value={ this.state }>
-				<Layout />
+				<Router>
+					<React.Fragment>
+						{ this.state.isAuthModalShown ? <AuthModal toggleAuthModal={ this.toggleAuthModal } /> : null }
+						<Header toggleAuthModal={ this.toggleAuthModal } />
+
+						<div className="content">
+							<Route exact path="/" component={Game} />
+							<Route exact path="/registration" component={Registration} />
+						</div>
+					</React.Fragment>
+				</Router>
 			</AppContext.Provider>
 		);
 	}
 }
-
-export default App;
