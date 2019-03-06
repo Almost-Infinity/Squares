@@ -4,14 +4,14 @@ import { Link } from 'react-router-dom';
 import $ from 'jquery';
 import './styles.sass';
 
-import { AppContext } from '../../App-context';
+import { AppCtx } from '../../App';
 
 export default class Header extends Component {
 	static propTypes = {
 		toggleAuthModal: PropTypes.func.isRequired
 	};
 
-	static contextType = AppContext;
+	static contextType = AppCtx;
 
 	state = {
 		isSidebarShown: false

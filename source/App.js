@@ -1,10 +1,12 @@
-import React, { Component } from 'react';
+import React, { Component, createContext } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Header from './components/header';
 import Game from './components/game';
 import Registration from './components/registration';
 import AuthModal from './components/auth-modal';
-import { AppContext } from './App-context';
+
+const AppCtx = createContext();
+export { AppCtx };
 
 export default class App extends Component {
 	state = {
@@ -54,7 +56,7 @@ export default class App extends Component {
 
 	render() {
 		return (
-			<AppContext.Provider value={ this.state }>
+			<AppCtx.Provider value={ this.state }>
 				<Router>
 					<React.Fragment>
 						{ this.state.isAuthModalShown ? <AuthModal toggleAuthModal={ this.toggleAuthModal } /> : null }
@@ -66,7 +68,7 @@ export default class App extends Component {
 						</div>
 					</React.Fragment>
 				</Router>
-			</AppContext.Provider>
+			</AppCtx.Provider>
 		);
 	}
 }
