@@ -32,20 +32,22 @@ app.use(favicon(path.resolve(__dirname, 'favicon.ico')));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-app.get('/badbrowser', function (req, res, next) {
+app.get('/badbrowser', function (req, res) {
 	res.send('Enabled javascript needed!');
 });
 
-app.post('/register', function (req, res, next) {
-	if (!req.body['reg-name'] || !req.body['reg-name'].match(/^[A-Za-zА-Яа-яЁё0-9-_.,()\[\]]{3,30}$/)) {
+app.post('/register', function (req, res) {
+	if (!req.body['reg-name'] || !req.body['reg-name'].match(/^[A-Za-zА-Яа-яЁё0-9-_.,()[\]]{3,30}$/)) {
 		res.send('Invalid nickname!');
 	}
-	else res.send('Hello, register!');
+	else {
+		res.send('Hello, register!');
+	}
 	// Name and password regexp – ^[A-Za-zА-Яа-яЁё0-9-_.,()\[\]]{3,30}$
 	// Email regexp –
 });
 
-app.post('/login', function (req, res, next) {
+app.post('/login', function (req, res) {
 	console.dir(req.body);
 	res.send('Hello, login!');
 });
@@ -58,7 +60,9 @@ app.get('/*', function (req, res) {
 
 app.listen(PORT, function () { //
 	mongoose.connect(`mongodb://${dbUser}:${dbPass}@${dbHost}:${dbPort}/${dbName}`, { useNewUrlParser: true }, (err) => {
-		if (err) throw err;
+		if (err) {
+			throw err;
+		}
 
 		console.log('MongoDB: successfully connected');
 		// console.log(mongoose.connection.readyState); // 0: disconnected, 1: connected, 2: connecting, 3: disconnecting
