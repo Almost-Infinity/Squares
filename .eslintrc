@@ -15,13 +15,17 @@
 		"node": true,
 		"es6": true
 	},
-	"parser": "babel-eslint",
 	"parserOptions": {
-		"sourceType": "module"
+		"ecmaVersion": 2018,
+		"sourceType": "module",
+		"ecmaFeatures": {
+			"globalReturn": false,
+			"impliedStrict ": true,
+			"jsx": true
+		}
 	},
 	"rules": {
 		"no-console": "off",
-		"no-unused-vars": [ "warn", { "vars": "all", "args": "after-used" } ],
 		"strict": [ "error", "global" ],
 		"curly": "warn"
 	}
