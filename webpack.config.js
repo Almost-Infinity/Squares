@@ -7,6 +7,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
+const TerserWebpackPlugin = require('terser-webpack-plugin');
 
 const isProduction = (process.env.NODE_ENV === 'production');
 
@@ -40,7 +41,19 @@ module.exports = {
 		splitChunks: {
 			chunks: 'all'
 		},
-		runtimeChunk: true
+		runtimeChunk: true,
+		minimizer: [
+			new TerserWebpackPlugin({
+				parallel: true,
+				sourceMap: isProduction,
+				extractComments: 'some',
+				terserOptions: {
+					compress: { inline: 1 },
+					mangle: { safari10: true },
+					output: { safari10: true }
+				}
+			})
+		]
 	},
 
 	module: {
@@ -51,7 +64,7 @@ module.exports = {
 			loader: 'eslint-loader',
 			options: {
 				fix: false,
-				cache: true,
+				cache: false,
 				eslintPath: require.resolve('eslint')
 			}
 		}, {
@@ -71,7 +84,6 @@ module.exports = {
 			}, {
 				loader: 'css-loader',
 				options: {
-					url: false,
 					sourceMap: isProduction
 				}
 			}, {
@@ -88,8 +100,9 @@ module.exports = {
 						}),
 						require('css-mqpacker'),
 						require('cssnano')({
-							preset: 'advanced',
-							cssDeclarationSorter: true
+							autoprefixer: false,
+							zindex: false,
+							cssDeclarationSorter: isProduction
 						})
 					],
 					sourceMap: isProduction
@@ -104,15 +117,17 @@ module.exports = {
 		}, {
 			test: /\.(png|jpe?g|gif|svg)$/,
 			use: [{
-				loader: isProduction ? 'file-loader' : 'url-loader'
+				loader: isProduction ? 'file-loader' : 'url-loader',
+				options: {
+					outputPath: '/static/images/'
+				}
 			}, {
 				loader: 'image-webpack-loader',
 				options: {
 					mozjpeg: { progressive: true, quality: 65 },
 					optipng: { enabled: false },
 					pngquant: { quality: '65-90', speed: 4 },
-					gifsicle: { interlaced: false },
-					webp: { quality: 75 }
+					gifsicle: { interlaced: false }
 				}
 			}]
 		}]
@@ -125,18 +140,14 @@ module.exports = {
 			summary: false,
 			clear: true
 		}),
-		isProduction && new CleanWebpackPlugin([
-			'static',
-			'**/*.html'
-		], {
-			root: BUILD_PATH,
-			verbose: false,
-			beforeEmit: true
+		isProduction && new CleanWebpackPlugin({
+			cleanOnceBeforeBuildPatterns: [ 'static', '**/*.html' ],
+			verbose: false
 		}),
 		!isProduction && new webpack.HotModuleReplacementPlugin(),
 		new HtmlWebpackPlugin({
 			inject: true,
-			minify: isProduction ? {
+			minify: isProduction && {
 				removeComments: true,
 				collapseWhitespace: true,
 				removeRedundantAttributes: true,
@@ -147,7 +158,7 @@ module.exports = {
 				minifyJS: true,
 				minifyCSS: true,
 				minifyURLs: true
-			} : false,
+			},
 			filename: './index.html',
 			template: SOURCE_PATH + '/views/index_template.html'
 		}),
