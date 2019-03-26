@@ -5,6 +5,7 @@ import Header from './components/header';
 import Game from './components/game';
 import Registration from './components/registration';
 import AuthModal from './components/auth-modal';
+import './sass/main.sass';
 
 const AppCtx = createContext();
 export { AppCtx };
