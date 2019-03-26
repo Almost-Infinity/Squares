@@ -1,4 +1,5 @@
 import React, { Component, createContext } from 'react';
+import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Header from './components/header';
 import Game from './components/game';
@@ -8,7 +9,7 @@ import AuthModal from './components/auth-modal';
 const AppCtx = createContext();
 export { AppCtx };
 
-export default class App extends Component {
+class App extends Component {
 	state = {
 		wndWidth: 0,
 		wndHeight: 0,
@@ -72,3 +73,5 @@ export default class App extends Component {
 		);
 	}
 }
+
+ReactDOM.render(<App />, document.getElementById('app'));
