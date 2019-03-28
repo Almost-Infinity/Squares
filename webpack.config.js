@@ -84,7 +84,11 @@ module.exports = {
 			}, {
 				loader: 'css-loader',
 				options: {
-					sourceMap: isProduction
+					sourceMap: isProduction,
+					modules: true,
+					localIdentName: '[hash:base64:5]',
+					camelCase: true,
+					importLoaders: 2
 				}
 			}, {
 				loader: 'postcss-loader',
