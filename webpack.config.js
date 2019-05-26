@@ -20,7 +20,7 @@ module.exports = {
 	devtool: isProduction ? 'source-map' : 'inline-source-map',
 	stats: 'minimal',
 
-	entry: SOURCE_PATH + '/App.js',
+	entry: SOURCE_PATH + '/index.js',
 	output: {
 		path: BUILD_PATH,
 		filename: isProduction ? 'static/scripts/squares.[hash:8].js' : 'static/scripts/squares.js',
@@ -170,7 +170,7 @@ module.exports = {
 			filename: isProduction ? 'static/styles/squares.[contenthash:8].css' : 'static/styles/squares.css',
 			chunkFilename: isProduction ? 'static/styles/[name].[contenthash:8].css' : 'static/styles/[name].chunk.css'
 		}),
-		isProduction && new BundleAnalyzerPlugin({ // report.html
+		isProduction && new BundleAnalyzerPlugin({
 			analyzerMode: 'static',
 			defaultSizes: 'gzip',
 			openAnalyzer: false

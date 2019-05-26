@@ -1,4 +1,4 @@
-@import '../../sass/_variables.sass'
+@import '../../sass/variables.sass'
 
 .modal-bg
 	position: fixed
@@ -13,17 +13,17 @@
 		width: 350px
 		border-radius: 5px
 		margin: 0 auto
-		background-color: $COLOR_LIGHT
-		box-shadow: $UI_SHADOW_LIGHT
+		background-color: $color-light
+		box-shadow: $ui-shadow-light
 		animation: ScaleIn 150ms cubic-bezier(.19, 1, .22, 1)
 
-		@media only screen and (max-width: $screen-mob-m)
+		@media only screen and (max-width: $screen-mob-sm)
 			width: 95%
 
 	.modal-header
 		width: 100%
 		height: 40px
-		background-color: $COLOR_MAIN
+		background-color: $color-main
 		border-radius: 5px 5px 0 0
 
 	.modal-title
@@ -32,7 +32,7 @@
 		font-size: 1.1rem
 		font-weight: 600
 		text-transform: uppercase
-		color: $COLOR_LIGHT
+		color: $color-light
 
 	.modal-close
 		float: right
@@ -46,7 +46,7 @@
 			opacity: 1
 
 		svg
-			fill: $COLOR_LIGHT
+			fill: $color-light
 
 	.modal-content
 		padding: 10px

@@ -1,30 +1,21 @@
-@import './_variables.sass'
+@import './variables.sass'
+@import './normalize.sass'
 
-.clearfix::after
-	content: ''
-	clear: both
-	display: table
-
-*,
-*::after,
-*::before
-	margin: 0
-	padding: 0
-	box-sizing: border-box
+*
 	outline: none
 
 html,
 body
 	direction: ltr
-	background-color: $COLOR_BG
-	font: normal normal 400 14px/1.5 'Open Sans' sans-serif
+	background-color: $color-bg
+	font: normal normal 400 14px/1.5 system-ui, -apple-system, BlinkMacSystemFont, 'Open Sans', sans-serif
 	-webkit-font-smoothing: antialiased
 	-moz-osx-font-smoothing: grayscale
 
-
 .content
-	width: $UI_PAGE_WIDTH
+	box-sizing: border-box
+	width: calc(100% - #{$ui-header-incline * 2})
 	margin: 1em auto
 	padding: 10px
-	box-shadow: $UI_SHADOW_LIGHT
-	background-color: $COLOR_WHITE
+	box-shadow: $ui-shadow-light
+	background-color: $color-white
