@@ -10,7 +10,7 @@ pids
 *.pid.lock
 
 # Build directories
-build/static/
+build/static/**
 build/*.html
 build/*.ico
 
