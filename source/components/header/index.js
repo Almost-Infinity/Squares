@@ -1,17 +1,17 @@
 import React from 'react';
-import { BrowserRouter, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import style from './styles.sass';
 
-export default function Header () {
-	return (
-		<header className={ style.header }>
-			<div className={ style.headerInner }>
-				<div className={ style.headerInnerLeft }>
-					<div className={ style.headerLogo } aria-label="логотип">
-						<a href="/" className={ style.headerLogoInner }></a>
-					</div>
-					<nav className={ style.navbar }>
-						<BrowserRouter>
+export default class Header extends React.Component {
+	render() {
+		return (
+			<header className={ style.header }>
+				<div className={ style.headerInner }>
+					<div className={ style.headerInnerLeft }>
+						<div className={ style.headerLogo } aria-label="логотип">
+							<a href="/" className={ style.headerLogoInner }></a>
+						</div>
+						<nav className={ style.navbar }>
 							<ul className={ style.navbarItemsWrapper }>
 								<li className={ style.navbarItem }>
 									<Link to="/" className={ style.navbarItemLink }>Главная</Link>
@@ -23,14 +23,14 @@ export default function Header () {
 									<Link to="/blog" className={ style.navbarItemLink }>Блог</Link>
 								</li>
 							</ul>
-						</BrowserRouter>
-					</nav>
+						</nav>
+					</div>
+					<div className={ style.headerInnerMiddle }></div>
+					<div className={ style.headerInnerRight }>
+						<Link to="/play" className={ style.headerPlayBtn }>Играть</Link>
+					</div>
 				</div>
-				<div className={ style.headerInnerMiddle }></div>
-				<div className={ style.headerInnerRight }>
-					<a href="/play" className={ style.headerPlayBtn }>Играть</a>
-				</div>
-			</div>
-		</header>
-	);
+			</header>
+		);
+	}
 }

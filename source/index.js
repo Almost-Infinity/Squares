@@ -1,22 +1,10 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import Header from './components/header';
-import style from './sass/main.sass';
+import { createElement } from 'react';
+import { render } from 'react-dom';
+import App from './components/app';
 
-const App = () => (
-	<React.Fragment>
-		<Header />
-		<div className={ style.content }>
-			<BrowserRouter>
-				<Switch>
-					<Route exact path="/"></Route>
-					<Route exact path="/top"></Route>
-					<Route exact path="/blog"></Route>
-				</Switch>
-			</BrowserRouter>
-		</div>
-	</React.Fragment>
-);
+const rootElement = document.getElementById('squares');
+if (rootElement === null) {
+	throw new Error('No root element!');
+}
 
-ReactDOM.render(<App />, document.getElementById('squares'));
+render(createElement(App), rootElement);

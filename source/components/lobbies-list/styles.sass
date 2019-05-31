@@ -1,0 +1,50 @@
+@import '../../sass/variables.sass'
+	
+.lobbies-list__list
+	width: 100%
+	background-color: #f9f9f9
+	box-shadow: $ui-shadow-light
+
+	thead
+		tr
+			font-size: 1.2em
+			letter-spacing: 1px
+			font-variant: small-caps
+			color: #515f75
+
+	tbody
+		tr
+			font-weight: 400
+			color: #444
+
+			&:nth-child(odd)
+				color: #444
+				background-color: #f8fdff
+
+	tr
+		text-align: center
+		border: 1px solid #dde5ef
+
+		th, td
+			padding: .7em
+			vertical-align: middle
+
+			&:first-child
+				text-align: left
+
+			&:last-child
+				text-align: right
+
+.lobbies-list_btn
+	appearance: none
+	background-color: #f8fdff
+	border: 2px solid #d3ddea
+	border-radius: 3px
+	color: #41556f
+	height: 30px
+	width: 140px
+	cursor: pointer
+	transition: box-shadow .05s
+
+	&:active
+		box-shadow: inset 0 1px 5px rgba(0, 0, 0, .125)
