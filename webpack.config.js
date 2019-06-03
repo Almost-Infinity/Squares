@@ -86,7 +86,7 @@ module.exports = {
 				options: {
 					sourceMap: isProduction,
 					modules: true,
-					localIdentName: '[hash:base64:5]',
+					localIdentName: isProduction ? '[hash:base64:5]' : '[local]',
 					camelCase: true,
 					importLoaders: 2
 				}
