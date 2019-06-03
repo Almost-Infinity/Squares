@@ -27,7 +27,7 @@ export default class Header extends React.Component {
 					</div>
 					<div className={ style.headerInnerMiddle }></div>
 					<div className={ style.headerInnerRight }>
-						<Link to="/play" className={ style.headerPlayBtn }>Играть</Link>
+						<button className={ style.headerBtnSignIn }>Войти</button>
 					</div>
 				</div>
 			</header>

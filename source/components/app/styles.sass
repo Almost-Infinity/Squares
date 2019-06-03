@@ -8,14 +8,14 @@ html,
 body
 	direction: ltr
 	background-color: $color-bg
-	font: normal normal 400 14px/1.5 system-ui, -apple-system, BlinkMacSystemFont, 'Open Sans', sans-serif
+	font: normal normal 400 14px/1.5 system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif
 	-webkit-font-smoothing: antialiased
 	-moz-osx-font-smoothing: grayscale
+
+#squares
+	overflow: hidden
 
 .content
 	box-sizing: border-box
 	width: $ui-page-width
-	margin: 1em auto
-	// padding: 10px
-	box-shadow: $ui-shadow-light
-	background-color: $color-white
+	margin: calc(#{$ui-header-height} + 1em) auto
