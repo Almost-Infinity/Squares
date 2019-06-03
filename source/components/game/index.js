@@ -1,5 +1,4 @@
 import React from 'react';
-import $ from 'jquery';
 
 function rect(props) {
 	const {ctx, x, y, width, height} = props;
@@ -29,9 +28,9 @@ export default class Game extends React.Component {
 	componentDidMount() {
 		document.title = 'Squares • <Lobbyname>';
 
-		const parentWidth = $(this.getField.current).parent().width();
+		const parentWidth = this.getField.current.parentElement.innerWidth;
 		this.getField.current.width = parentWidth;
-		this.getField.current.height = parentWidth / ($(window).width() / $(window).height());
+		this.getField.current.height = parentWidth / (window.innerWidth / window.innerHeight);
 
 		this.updateCanvas();
 	}

@@ -56,7 +56,6 @@
 		"body-parser": "^1.18.3",
 		"config": "^3.0.1",
 		"express": "^4.16.4",
-		"jquery": "^3.4.1",
 		"mongoose": "^5.4.19",
 		"react": "^16.8.5",
 		"react-dom": "^16.8.5",
