@@ -28,13 +28,15 @@ module.exports = {
 	},
 
 	devServer: {
+		open: true,
 		contentBase: path.join(__dirname, 'build'),
 		stats: 'minimal',
 		overlay: false,
 		clientLogLevel: 'none',
 		compress: true,
 		port: 1337,
-		hot: true
+		hot: true,
+		historyApiFallback: true
 	},
 
 	optimization: {
@@ -123,7 +125,8 @@ module.exports = {
 			use: [{
 				loader: isProduction ? 'file-loader' : 'url-loader',
 				options: {
-					outputPath: '/static/images/'
+					outputPath: '/static/images/',
+					name: '[hash:8].[ext]'
 				}
 			}, {
 				loader: 'image-webpack-loader',
@@ -139,7 +142,7 @@ module.exports = {
 
 	plugins: [
 		new ProgressBarPlugin({
-			format: '\t' + chalk.green.italic(':msg') + '\n\t[' + chalk.green.bold(':bar') + '] ' + chalk.gray(':percent') + ' (:elapsed seconds)',
+			format: `\t${chalk.green.italic(':msg')} [${chalk.green.bold(':bar')}] ${chalk.gray(':percent')}`,
 			renderThrottle: 100,
 			summary: false,
 			clear: true
@@ -150,7 +153,7 @@ module.exports = {
 		}),
 		!isProduction && new webpack.HotModuleReplacementPlugin(),
 		new HtmlWebpackPlugin({
-			inject: true,
+			hash: true,	
 			minify: isProduction && {
 				removeComments: true,
 				collapseWhitespace: true,
@@ -174,6 +177,9 @@ module.exports = {
 			analyzerMode: 'static',
 			defaultSizes: 'gzip',
 			openAnalyzer: false
+		}),
+		new webpack.DefinePlugin({
+			DEVBUILD: JSON.stringify(!isProduction)
 		})
 	].filter(Boolean)
 };

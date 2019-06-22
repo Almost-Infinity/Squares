@@ -25,5 +25,8 @@
 		"no-console": "off",
 		"curly": "warn",
 		"strict": 0
+	},
+	"globals": {
+		"DEVBUILD": "readonly"
 	}
 }
