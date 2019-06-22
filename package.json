@@ -16,6 +16,8 @@
 		"babel-eslint": "^10.0.1",
 		"babel-jest": "^24.5.0",
 		"babel-loader": "^8.0.5",
+		"browserslist": "^4.6.3",
+		"caniuse-lite": "^1.0.30000976",
 		"chalk": "^2.4.2",
 		"clean-webpack-plugin": "^2.0.1",
 		"css-loader": "^2.1.1",
@@ -43,6 +45,8 @@
 		"postcss-preset-env": "^6.6.0",
 		"progress-bar-webpack-plugin": "^1.12.1",
 		"prop-types": "^15.7.2",
+		"react-redux": "^7.1.0",
+		"redux": "^4.0.1",
 		"sass-loader": "^7.1.0",
 		"style-loader": "^0.23.1",
 		"terser-webpack-plugin": "^1.2.3",
@@ -64,9 +68,9 @@
 		"serve-favicon": "^2.5.0"
 	},
 	"browserslist": [
-		">0.2%",
+		"> 0.2%",
 		"not dead",
-		"not ie <= 11",
+		"ie <= 11",
 		"not op_mini all"
 	],
 	"jest": {
