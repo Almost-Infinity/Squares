@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 
 import style from './styles.sass';
 
@@ -14,16 +14,16 @@ export default function Header() {
 					<nav className={ style.navbar }>
 						<ul className={ style.navbarItemsWrapper }>
 							<li className={ style.navbarItem }>
-								<Link to="/" className={ style.navbarItemLink }>Главная</Link>
+								<NavLink to="/" exact className={ style.navbarItemLink } activeClassName={ style.navbarItemLinkActive }>Главная</NavLink>
 							</li>
 							<li className={ style.navbarItem }>
-								<Link to="/top" className={ style.navbarItemLink }>Топ игроков</Link>
+								<NavLink to="/top" exact className={ style.navbarItemLink } activeClassName={ style.navbarItemLinkActive }>Топ игроков</NavLink>
 							</li>
 							<li className={ style.navbarItem }>
-								<Link to="/blog" className={ style.navbarItemLink }>Блог</Link>
+								<NavLink to="/blog" exact className={ style.navbarItemLink } activeClassName={ style.navbarItemLinkActive }>Блог</NavLink>
 							</li>
 							<li className={ style.navbarItem }>
-								<Link to="/play" className={ style.navbarItemLink }>Тест</Link>
+								<NavLink to="/play" exact className={ style.navbarItemLink } activeClassName={ style.navbarItemLinkActive }>Тест</NavLink>
 							</li>
 						</ul>
 					</nav>
