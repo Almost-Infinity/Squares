@@ -1,157 +1,189 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import * as U from '../../utility';
-import { CELL_X, CELL_Y } from './constants';
 import Square from './square';
+import GameControl from '../game-control';
 
 import styles from './styles.sass';
 
-const drawGrid = (ctx, canvSize) => {
-	const CELL_SIZE_X = canvSize.w / CELL_X;
-	const CELL_SIZE_Y = canvSize.h / CELL_Y;
 
-	ctx.beginPath();
-	for (let i = 1; i < CELL_X; i++) {
-		ctx.moveTo(0 + CELL_SIZE_X * i, 0);
-		ctx.lineTo(0 + CELL_SIZE_X * i, canvSize.h);
-	}
+const CELL_X = 120;
+const CELL_Y = Math.round(CELL_X / 1.77); // Cell aspect ratio 16:9
 
-	for (let i = 1; i < CELL_Y; i++) {
-		ctx.moveTo(0, 0 + CELL_SIZE_Y * i);
-		ctx.lineTo(canvSize.w, 0 + CELL_SIZE_Y * i);
-	}
-	ctx.stroke();
-}
+const CELL_SIZE = 20; // px
 
-export default class Game extends React.Component {
+const FIELD_WIDTH = CELL_X * CELL_SIZE;
+const FIELD_HEIGHT = CELL_Y * CELL_SIZE;
+
+
+class Game extends React.Component {
 	static propTypes = {
-		sqPool: PropTypes.arrayOf(Square).isRequired
+		sqPool: PropTypes.arrayOf(
+			PropTypes.instanceOf(Square)
+		).isRequired
 	};
 
 	constructor(props) {
 		super(props);
-		this.fieldRef = null;
-		this.AFHandle = null
-		this.fieldSize = {};
 
-		this.grabOffsetX = 0;
-		this.grabOffsetY = 0;
-		this.grabbedSq = null;
-		this.isNeedRedraw = true; // true for first draw
-
-		this.state = {
-			squaresPool: [
-				new Square({ x: 0, y: 0 }, { w: 10, h: 10 }, 'red'),
-				new Square({ x: 20, y: 5 }, { w: 20, h: 10 }, 'green'),
-				new Square({ x: 45, y: 25 }, { w: 10, h: 15 }, 'blue'),
-				new Square({ x: 60, y: 20 }, { w: 20, h: 15 }, 'orange')
-			]
-		};
-	}
-
-	isIntersect = (cursorXpx, cursorYpx) => {
-		const cursorPosX = Math.floor(cursorXpx / (this.fieldSize.w / CELL_X)); 
-		const cursorPosY = Math.floor(cursorYpx / (this.fieldSize.h / CELL_Y));
-
-		for (let s of this.state.squaresPool) {
-			if (cursorPosX >= s.pos.x && cursorPosX < s.pos.x + s.size.w &&
-				cursorPosY >= s.pos.y && cursorPosY < s.pos.y + s.size.h) {
-					return s;
-			}
-		}
-		return false;
-	}
-
-	onMouseMove = (e) => {
-		if (this.grabbedSq instanceof Square) {
-			// const cursorPosX = Math.floor((e.layerX - this.grabOffsetX) / (this.fieldSize.w / CELL_X)); 
-			// const cursorPosY = Math.floor((e.layerY - this.grabOffsetY) / (this.fieldSize.h / CELL_Y));
-
-			console.log('move');
-
-			// this.grabbedSq.setPos(cursorPosX, cursorPosY, this.fieldSize, false);
-			this.grabbedSq.setPos(100, 100, this.fieldSize, false);
-			this.isNeedRedraw = true;
-		}
-		else {
-			if (this.isIntersect(e.layerX, e.layerY)) {
-				U.addClass(e.target, 'grab');
-			}
-			else {
-				U.removeClass(e.target, 'grab');
-			}
-		}
-	}
-
-	onMouseKey = (e) => {
-		if (e.type === 'mousedown') {
-			if (e.which === 1) {
-				const sq = this.isIntersect(e.layerX, e.layerY);
-				if (sq instanceof Square) {
-					this.grabbedSq = sq;
-					this.grabOffsetX = e.layerX - (sq.pos.x / (this.fieldSize.w / CELL_X));
-					this.grabOffsetY = e.layerY - (sq.pos.y / (this.fieldSize.h / CELL_Y));
-				}
-			}
-		}
-		else if (e.type == 'mouseup') {
-			if (e.which === 1) {
-				this.grabbedSq = null;
-				this.grabOffsetX = 0;
-				this.grabOffsetY = 0;
-			}
-		}
+		this.field = React.createRef(); // Ref to the canvas
+		this.RAFHandle = null;
+		this.isNeedRedraw = true; // true - for first draw
+		this.viewportOffsetX = 0;
+		this.viewportOffsetY = 0;
+		this.zoomFactor = 1;
+		this.fieldIMG = null;
 	}
 
 	componentDidMount() {
-		const { fieldRef } = this;
-		const parentWidth = fieldRef.parentElement.clientWidth;
-		fieldRef.width = parentWidth;
-		fieldRef.height = parentWidth / (window.outerWidth / window.outerHeight) * 0.9;
+		const field = this.field.current;
 
-		this.fieldSize = {
-			w: fieldRef.width,
-			h: fieldRef.height
-		};
+		field.width = field.clientWidth;
+		field.height = field.parentElement.clientHeight;
 
-		this.fieldRef.addEventListener('mousedown', this.onMouseKey);
-		this.fieldRef.addEventListener('mouseup', this.onMouseKey);
-		this.fieldRef.addEventListener('mousemove', this.onMouseMove);
-		this.AFHandle = requestAnimationFrame(this.update);
+		this.generateField();
+
+		this.RAFHandle = requestAnimationFrame(this.update);
+		field.addEventListener('wheel', this.onMouseScroll);
+		field.addEventListener('mousemove', this.onMouseMove);
+		field.addEventListener('mouseup', this.onMouseUp);
+		window.addEventListener('resize', this.onWindowResize);
 	}
 
 	componentWillUnmount() {
-		this.fieldRef.removeEventListener('mousedown', this.onMouseKey);
-		this.fieldRef.removeEventListener('mouseup', this.onMouseKey);
-		this.fieldRef.removeEventListener('mousemove', this.onMouseMove);
-		cancelAnimationFrame(this.AFHandle);
+		const field = this.field.current;
+		field.removeEventListener('wheel', this.onMouseScroll);
+		field.removeEventListener('mousemove', this.onMouseMove);
+		field.removeEventListener('mouseup', this.onMouseUp);
+		window.removeEventListener('resize', this.onWindowResize);
+		cancelAnimationFrame(this.RAFHandle);
+	}
+
+	setFieldPosition = (ox, oy) => {
+		const field = this.field.current;
+
+		// X
+		if (ox < 0) {
+			this.viewportOffsetX = 0;
+		}
+		else if (~~(field.width * this.zoomFactor) + ox > FIELD_WIDTH) {
+			this.viewportOffsetX = FIELD_WIDTH - ~~(field.width * this.zoomFactor);
+		}
+		else {
+			this.viewportOffsetX = ox;
+		}
+
+		// Y
+		if (oy < 0) {
+			this.viewportOffsetY = 0;
+		}
+		else if (~~(field.height * this.zoomFactor) + oy > FIELD_HEIGHT) {
+			this.viewportOffsetY = FIELD_HEIGHT - ~~(field.height * this.zoomFactor);
+		}
+		else {
+			this.viewportOffsetY = oy;
+		}
+	}
+
+	onMouseUp = (e) => {
+		if (e.button === 0) {
+			e.target.style.cursor = 'default';
+		}
+	}
+
+	onMouseMove = (e) => {
+		if (e.buttons === 1) {
+			e.target.style.cursor = 'move';
+
+			this.setFieldPosition(this.viewportOffsetX - e.movementX, this.viewportOffsetY - e.movementY);
+			this.isNeedRedraw = true;
+		}
+	}
+
+	onMouseScroll = (e) => {
+		const zoomDir = e.deltaY > 0 ? 1 : -1;
+		const newZoom = zoomDir * 0.05;
+
+		if (this.zoomFactor + newZoom > 1) {
+			const field = this.field.current;
+			const newOffsetX = this.viewportOffsetX - e.offsetX * newZoom;
+			const newOffsetY = this.viewportOffsetY - e.offsetY * newZoom;
+
+			if ((field.width <= Math.round(FIELD_WIDTH / (this.zoomFactor + newZoom))) && (field.height <= Math.round(FIELD_HEIGHT / (this.zoomFactor + newZoom)))) {
+				this.zoomFactor += newZoom;
+				this.setFieldPosition(newOffsetX, newOffsetY);
+			}
+
+			this.isNeedRedraw = true;
+		}
+	}
+
+	onWindowResize = () => {
+		const field = this.field.current;
+
+		field.width = ~~field.clientWidth;
+		field.height = ~~field.parentElement.clientHeight;
+
+		this.isNeedRedraw = true;
+	}
+
+	generateField = () => {
+		const ctx = document.createElement('canvas').getContext('2d');
+		ctx.canvas.width = FIELD_WIDTH;
+		ctx.canvas.height = FIELD_HEIGHT;
+
+		ctx.lineWidth = 1;
+		ctx.strokeStyle = 'rgba(153, 153, 153, .5)';
+
+		// Draw grid
+		ctx.beginPath();
+		for (let i = 1; i < CELL_X; i++) { // Vertical lines
+			ctx.moveTo(CELL_SIZE * i, 0);
+			ctx.lineTo(CELL_SIZE * i, FIELD_HEIGHT);
+		}
+
+		for (let i = 1; i < CELL_Y; i++) { // Horizontal lines
+			ctx.moveTo(0, CELL_SIZE * i);
+			ctx.lineTo(FIELD_WIDTH, CELL_SIZE * i);
+		}
+		ctx.stroke();
+
+		// Draw squares
+		for (let s of this.props.sqPool) {
+			ctx.fillStyle = s.color;
+			ctx.fillRect(s.pos.x * CELL_SIZE, s.pos.y * CELL_SIZE, s.size.w * CELL_SIZE, s.size.h * CELL_SIZE);
+			ctx.fill();
+		}
+	
+		this.fieldIMG = new Image();
+		this.fieldIMG.src = ctx.canvas.toDataURL("image/png");
 	}
 
 	update = () => {
 		if (this.isNeedRedraw) {
 			this.isNeedRedraw = false;
+			const field = this.field.current;
+			const ctx = field.getContext('2d');
 
-			const { fieldSize } = this;
-			const ctx = this.fieldRef.getContext('2d');
-			ctx.clearRect(0, 0, fieldSize.w, fieldSize.h);
-
-			ctx.strokeStyle = 'rgba(153, 153, 153, .3)';
-			drawGrid(ctx, this.fieldSize);
-
-			const CELL_SIZE_X = this.fieldSize.w / CELL_X;
-			const CELL_SIZE_Y = this.fieldSize.h / CELL_Y;
-
-			for (let s of this.state.squaresPool) {
-				ctx.fillStyle = s.color;
-				ctx.fillRect(s.pos.x * CELL_SIZE_X, s.pos.y * CELL_SIZE_Y, s.size.w * CELL_SIZE_X, s.size.h * CELL_SIZE_Y);
-				ctx.fill();
-			}
+			ctx.clearRect(0, 0, field.width, field.height);
+			ctx.drawImage(this.fieldIMG, this.viewportOffsetX, this.viewportOffsetY, field.width * this.zoomFactor, field.height * this.zoomFactor, 0, 0, field.width, field.height);
 		}
-		this.AFHandle = requestAnimationFrame(this.update);
+		this.RAFHandle = requestAnimationFrame(this.update);
 	}
 
 	render() {
-		return <canvas ref={ (node) => this.fieldRef = node } className={styles.field}></canvas>;
+		return (
+			<React.Fragment>
+				<canvas ref={ this.field } className={ styles.field }></canvas>
+				<GameControl />
+			</React.Fragment>
+		);
 	}
 }
+
+const mapStateToProps = (state) => ({
+  sqPool: state.squaresPool
+});
+
+export default connect(mapStateToProps)(Game);

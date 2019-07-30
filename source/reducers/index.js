@@ -1,1 +1,1 @@
-export { game } from './game';
+export { gameReducer } from './game';

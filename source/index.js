@@ -1,36 +1,40 @@
 import React from 'react';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { render } from 'react-dom';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
-import { game } from './reducers';
+import { gameReducer } from './reducers/game';
 
-import App from './components/app';
+import Layout from './components/layout';
+import Game from './components/game';
+import Lobbies from './components/lobbies-list';
+
+import './sass/main.sass';
 
 const rootElement = document.getElementById('squares');
 if (rootElement === null) {
 	throw new Error('No root element!');
 }
 
-let requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
 	window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
 
-window.requestAnimationFrame = requestAnimationFrame;
-
-
-import { sqPoolAdd } from './actions';
-window.addSq = (x, y, w, h, c) => {
-	sqPoolAdd(x, y, w, h, c);
-}
-
-
 const store = createStore(
-	game,
+	gameReducer,
 	DEVBUILD && window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );
 
 render(
 	<Provider store={store}>
-		<App />
+		<Router>
+			<Layout>
+				<Route exact path='/' component={Lobbies} />
+				<Route path="/play" render={() => <Game />} />
+				<Route path="/top" />
+				<Route path="/blog" />
+				<Route path="/auth" />
+			</Layout>
+		</Router>
 	</Provider>,
 	rootElement
 );

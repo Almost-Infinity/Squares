@@ -1,11 +1,12 @@
-@import '../../sass/variables.sass'
-@import '../../sass/normalize.sass'
+@import './variables.sass'
+@import './normalize.sass'
 
 *
 	outline: none
 
 html,
 body
+	height: 100%
 	direction: ltr
 	background-color: $color-bg
 	font: normal normal 400 14px/1.5 system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif
@@ -14,8 +15,4 @@ body
 
 #squares
 	overflow: hidden
-
-.content
-	box-sizing: border-box
-	width: $ui-page-width
-	margin: calc(#{$ui-header-height} + 1em) auto
+	height: inherit
