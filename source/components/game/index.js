@@ -3,12 +3,11 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import Square from './square';
-import GameControl from '../game-control';
 
 import styles from './styles.sass';
 
 
-const CELL_X = 120;
+const CELL_X = 150;
 const CELL_Y = Math.round(CELL_X / 1.77); // Cell aspect ratio 16:9
 
 const CELL_SIZE = 20; // px
@@ -102,8 +101,9 @@ class Game extends React.Component {
 	}
 
 	onMouseScroll = (e) => {
+		const zoomStep = 0.05;
 		const zoomDir = e.deltaY > 0 ? 1 : -1;
-		const newZoom = zoomDir * 0.05;
+		const newZoom = zoomDir * zoomStep;
 
 		if (this.zoomFactor + newZoom > 1) {
 			const field = this.field.current;
@@ -113,6 +113,17 @@ class Game extends React.Component {
 			if ((field.width <= Math.round(FIELD_WIDTH / (this.zoomFactor + newZoom))) && (field.height <= Math.round(FIELD_HEIGHT / (this.zoomFactor + newZoom)))) {
 				this.zoomFactor += newZoom;
 				this.setFieldPosition(newOffsetX, newOffsetY);
+			}
+			else {
+				// X axis zoom correction
+				if ((this.zoomFactor + zoomStep) * field.width > FIELD_WIDTH) {
+					this.zoomFactor = FIELD_WIDTH / field.width;
+				}
+
+				// Y axis zoom correction
+				if ((this.zoomFactor + zoomStep) * field.height > FIELD_HEIGHT) {
+					this.zoomFactor = FIELD_HEIGHT / field.height;
+				}
 			}
 
 			this.isNeedRedraw = true;
@@ -124,6 +135,16 @@ class Game extends React.Component {
 
 		field.width = ~~field.clientWidth;
 		field.height = ~~field.parentElement.clientHeight;
+
+		// X axis fix overzoom
+		if (FIELD_WIDTH / field.width < this.zoomFactor) {
+			this.zoomFactor = FIELD_WIDTH / field.width;
+		}
+
+		// Y axis fix overzoom
+		if (FIELD_HEIGHT / field.height < this.zoomFactor) {
+			this.zoomFactor = FIELD_HEIGHT / field.height;
+		}
 
 		this.isNeedRedraw = true;
 	}
@@ -173,12 +194,7 @@ class Game extends React.Component {
 	}
 
 	render() {
-		return (
-			<React.Fragment>
-				<canvas ref={ this.field } className={ styles.field }></canvas>
-				<GameControl />
-			</React.Fragment>
-		);
+		return <canvas ref={ this.field } className={ styles.field }></canvas>;
 	}
 }
 
