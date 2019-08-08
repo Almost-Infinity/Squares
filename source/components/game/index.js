@@ -7,7 +7,7 @@ import Square from './square';
 import styles from './styles.sass';
 
 
-const CELL_X = 150;
+const CELL_X = 120;
 const CELL_Y = Math.round(CELL_X / 1.77); // Cell aspect ratio 16:9
 
 const CELL_SIZE = 20; // px
@@ -18,9 +18,7 @@ const FIELD_HEIGHT = CELL_Y * CELL_SIZE;
 
 class Game extends React.Component {
 	static propTypes = {
-		sqPool: PropTypes.arrayOf(
-			PropTypes.instanceOf(Square)
-		).isRequired
+		sqPool: PropTypes.arrayOf(PropTypes.instanceOf(Square)).isRequired
 	};
 
 	constructor(props) {
@@ -29,17 +27,28 @@ class Game extends React.Component {
 		this.field = React.createRef(); // Ref to the canvas
 		this.RAFHandle = null;
 		this.isNeedRedraw = true; // true - for first draw
+
 		this.viewportOffsetX = 0;
 		this.viewportOffsetY = 0;
 		this.zoomFactor = 1;
 		this.fieldIMG = null;
+		this.targetCell = {
+			x: null,
+			y: null,
+			width: 1,
+			height: 1
+		};
+		this.cursorPos = {
+			x: null,
+			y: null
+		};
 	}
 
 	componentDidMount() {
 		const field = this.field.current;
 
-		field.width = field.clientWidth;
-		field.height = field.parentElement.clientHeight;
+		field.width = ~~field.clientWidth;
+		field.height = ~~field.parentElement.clientHeight;
 
 		this.generateField();
 
@@ -47,14 +56,17 @@ class Game extends React.Component {
 		field.addEventListener('wheel', this.onMouseScroll);
 		field.addEventListener('mousemove', this.onMouseMove);
 		field.addEventListener('mouseup', this.onMouseUp);
+		document.addEventListener('keydown', this.onKeyDown);
 		window.addEventListener('resize', this.onWindowResize);
 	}
 
 	componentWillUnmount() {
 		const field = this.field.current;
+
 		field.removeEventListener('wheel', this.onMouseScroll);
 		field.removeEventListener('mousemove', this.onMouseMove);
 		field.removeEventListener('mouseup', this.onMouseUp);
+		document.removeEventListener('keydown', this.onKeyDown);
 		window.removeEventListener('resize', this.onWindowResize);
 		cancelAnimationFrame(this.RAFHandle);
 	}
@@ -92,15 +104,28 @@ class Game extends React.Component {
 	}
 
 	onMouseMove = (e) => {
+		this.cursorPos.x = e.offsetX;
+		this.cursorPos.y = e.offsetY;
+
 		if (e.buttons === 1) {
+			this.targetCell.x = null;
+			this.targetCell.y = null;
 			e.target.style.cursor = 'move';
 
 			this.setFieldPosition(this.viewportOffsetX - e.movementX, this.viewportOffsetY - e.movementY);
-			this.isNeedRedraw = true;
 		}
+		else {
+			this.targetCell.x = ~~((this.viewportOffsetX + e.offsetX) / (CELL_SIZE / this.zoomFactor)); 
+			this.targetCell.y = ~~((this.viewportOffsetY + e.offsetY) / (CELL_SIZE / this.zoomFactor));
+		}
+
+		this.isNeedRedraw = true;
 	}
 
 	onMouseScroll = (e) => {
+		this.targetCell.x = null;
+		this.targetCell.y = null;
+
 		const zoomStep = 0.05;
 		const zoomDir = e.deltaY > 0 ? 1 : -1;
 		const newZoom = zoomDir * zoomStep;
@@ -149,6 +174,14 @@ class Game extends React.Component {
 		this.isNeedRedraw = true;
 	}
 
+	onKeyDown = (e) => {
+		e.preventDefault();
+
+		if (e.keyCode === 121) { // F10
+			this.field.current.requestFullscreen();
+		}
+	}
+
 	generateField = () => {
 		const ctx = document.createElement('canvas').getContext('2d');
 		ctx.canvas.width = FIELD_WIDTH;
@@ -189,6 +222,22 @@ class Game extends React.Component {
 
 			ctx.clearRect(0, 0, field.width, field.height);
 			ctx.drawImage(this.fieldIMG, this.viewportOffsetX, this.viewportOffsetY, field.width * this.zoomFactor, field.height * this.zoomFactor, 0, 0, field.width, field.height);
+		
+			// Highlighting cell under the cursor
+			const tc = this.targetCell;
+			if (tc.x !== null && tc.y !== null) {
+				ctx.save();
+				ctx.strokeStyle = '#3dbbd1';
+				ctx.lineWidth = 2;
+				ctx.strokeRect(
+					(tc.x * CELL_SIZE / this.zoomFactor) - this.viewportOffsetX,
+					(tc.y * CELL_SIZE / this.zoomFactor) - this.viewportOffsetY,
+					tc.width * CELL_SIZE / this.zoomFactor,
+					tc.height * CELL_SIZE / this.zoomFactor
+				);
+				ctx.restore();
+			}
+
 		}
 		this.RAFHandle = requestAnimationFrame(this.update);
 	}
