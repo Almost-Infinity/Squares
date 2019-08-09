@@ -192,9 +192,8 @@ class Game extends React.Component {
 	}
 
 	onKeyDown = (e) => {
-		e.preventDefault();
-
 		if (e.keyCode === 121) { // F10
+			e.preventDefault();
 			this.field.current.requestFullscreen();
 		}
 	}
