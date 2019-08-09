@@ -15,7 +15,6 @@ const CELL_SIZE = 20; // px
 const FIELD_WIDTH = CELL_X * CELL_SIZE;
 const FIELD_HEIGHT = CELL_Y * CELL_SIZE;
 
-
 class Game extends React.Component {
 	static propTypes = {
 		sqPool: PropTypes.arrayOf(PropTypes.instanceOf(Square)).isRequired
@@ -32,16 +31,13 @@ class Game extends React.Component {
 		this.viewportOffsetY = 0;
 		this.zoomFactor = 1;
 		this.fieldIMG = null;
-		this.targetCell = {
+		this.selection = {
 			x: null,
 			y: null,
 			width: 1,
 			height: 1
 		};
-		this.cursorPos = {
-			x: null,
-			y: null
-		};
+		this.prevTargetCell = { x: null, y: null };
 	}
 
 	componentDidMount() {
@@ -104,10 +100,7 @@ class Game extends React.Component {
 	}
 
 	onMouseMove = (e) => {
-		this.cursorPos.x = e.offsetX;
-		this.cursorPos.y = e.offsetY;
-
-		if (e.buttons === 1) {
+		if (e.buttons === 1 && e.ctrlKey) { // Moving
 			this.targetCell.x = null;
 			this.targetCell.y = null;
 			e.target.style.cursor = 'move';
@@ -115,16 +108,40 @@ class Game extends React.Component {
 			this.setFieldPosition(this.viewportOffsetX - e.movementX, this.viewportOffsetY - e.movementY);
 		}
 		else {
-			this.targetCell.x = ~~((this.viewportOffsetX + e.offsetX) / (CELL_SIZE / this.zoomFactor)); 
-			this.targetCell.y = ~~((this.viewportOffsetY + e.offsetY) / (CELL_SIZE / this.zoomFactor));
+			const px2cell = (viewportOffset, mouseOffset) => ~~((viewportOffset + mouseOffset) / (CELL_SIZE / this.zoomFactor));
+			const newCellX = px2cell(this.viewportOffsetX, e.offsetX);
+			const newCellY = px2cell(this.viewportOffsetY, e.offsetY);
+
+			// ======================================
+			// NOT COMPLETED
+			// ======================================
+			if (e.buttons === 1) { // Resize highlight
+				if (newCellX !== this.prevTargetCell.x || newCellY !== this.prevTargetCell.y) {
+					if (this.prevTargetCell.x !== null && this.prevTargetCell.y !== null) {
+						let deltaX = newCellX - this.selection.x;
+						let deltaY = newCellY - this.selection.y;
+
+						this.selection.width = deltaX < 0 ? deltaX - 1 : deltaX + 1;
+						this.selection.height = deltaY < 0 ? deltaY - 1 : deltaY + 1;
+					}
+					this.prevTargetCell.x = newCellX;
+					this.prevTargetCell.y = newCellY;
+				}
+			}
+			else { // Draw highlight
+				this.selection.x = newCellX;
+				this.selection.y = newCellY;
+				this.selection.width = 1;
+				this.selection.height = 1;
+			}
 		}
 
 		this.isNeedRedraw = true;
 	}
 
 	onMouseScroll = (e) => {
-		this.targetCell.x = null;
-		this.targetCell.y = null;
+		this.selection.x = null;
+		this.selection.y = null;
 
 		const zoomStep = 0.05;
 		const zoomDir = e.deltaY > 0 ? 1 : -1;
@@ -141,12 +158,12 @@ class Game extends React.Component {
 			}
 			else {
 				// X axis zoom correction
-				if ((this.zoomFactor + zoomStep) * field.width > FIELD_WIDTH) {
+				if ((this.zoomFactor + zoomStep) * field.width >= FIELD_WIDTH) {
 					this.zoomFactor = FIELD_WIDTH / field.width;
 				}
 
 				// Y axis zoom correction
-				if ((this.zoomFactor + zoomStep) * field.height > FIELD_HEIGHT) {
+				if ((this.zoomFactor + zoomStep) * field.height >= FIELD_HEIGHT) {
 					this.zoomFactor = FIELD_HEIGHT / field.height;
 				}
 			}
@@ -223,15 +240,18 @@ class Game extends React.Component {
 			ctx.clearRect(0, 0, field.width, field.height);
 			ctx.drawImage(this.fieldIMG, this.viewportOffsetX, this.viewportOffsetY, field.width * this.zoomFactor, field.height * this.zoomFactor, 0, 0, field.width, field.height);
 		
-			// Highlighting cell under the cursor
-			const tc = this.targetCell;
+			// Highlighting area under the cursor
+			const tc = this.selection;
 			if (tc.x !== null && tc.y !== null) {
 				ctx.save();
 				ctx.strokeStyle = '#3dbbd1';
 				ctx.lineWidth = 2;
+
+				const px = (tc.x * CELL_SIZE / this.zoomFactor) - this.viewportOffsetX;
+				const py = (tc.y * CELL_SIZE / this.zoomFactor) - this.viewportOffsetY; 
 				ctx.strokeRect(
-					(tc.x * CELL_SIZE / this.zoomFactor) - this.viewportOffsetX,
-					(tc.y * CELL_SIZE / this.zoomFactor) - this.viewportOffsetY,
+					this.selection.width < 0 ? px + 20 : px,
+					this.selection.height < 0 ? py + 20 : py,
 					tc.width * CELL_SIZE / this.zoomFactor,
 					tc.height * CELL_SIZE / this.zoomFactor
 				);
