@@ -1,13 +1,13 @@
 import React from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { render } from 'react-dom';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import { gameReducer } from './reducers/game';
 
 import Layout from './components/layout';
-import Game from './components/game';
-import Lobbies from './components/lobbies-list';
+
+import { routes } from './routes';
 
 import './sass/main.sass';
 
@@ -26,15 +26,11 @@ const store = createStore(
 
 render(
 	<Provider store={store}>
-		<Router>
+		<BrowserRouter>
 			<Layout>
-				<Route exact path='/' component={Lobbies} />
-				<Route path="/play" render={() => <Game />} />
-				<Route path="/top" />
-				<Route path="/blog" />
-				<Route path="/auth" />
+				{ routes }
 			</Layout>
-		</Router>
+		</BrowserRouter>
 	</Provider>,
 	rootElement
 );
