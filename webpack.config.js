@@ -60,7 +60,7 @@ module.exports = {
 
 	module: {
 		rules: [{
-			test: /\.js?$/,
+			test: /\.jsx?$/,
 			enforce: 'pre',
 			exclude: /node_modules/,
 			loader: 'eslint-loader',
@@ -70,7 +70,7 @@ module.exports = {
 				eslintPath: require.resolve('eslint')
 			}
 		}, {
-			test: /\.js$/,
+			test: /\.jsx?$/,
 			exclude: /node_modules/,
 			loader: 'babel-loader',
 			options: {
@@ -138,6 +138,13 @@ module.exports = {
 				}
 			}]
 		}]
+	},
+
+	resolve: {
+		extensions: [ '.wasm', '.mjs', '.js', '.jsx', '.json' ],
+		alias: {
+			Components: path.resolve(__dirname, 'source/components/')
+		}
 	},
 
 	plugins: [
