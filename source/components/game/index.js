@@ -7,13 +7,16 @@ import Square from './square';
 import styles from './styles.sass';
 
 
-const CELL_X = 120;
+const CELL_X = 150;
 const CELL_Y = Math.round(CELL_X / 1.77); // Cell aspect ratio 16:9
 
-const CELL_SIZE = 20; // px
+const CELL_SIZE = 15; // px
 
 const FIELD_WIDTH = CELL_X * CELL_SIZE;
 const FIELD_HEIGHT = CELL_Y * CELL_SIZE;
+
+const MIN_ZOOM = 1;
+const ZOOM_STEPS = 10;
 
 class Game extends React.Component {
 	static propTypes = {
@@ -27,17 +30,19 @@ class Game extends React.Component {
 		this.RAFHandle = null;
 		this.isNeedRedraw = true; // true - for first draw
 
-		this.viewportOffsetX = 0;
-		this.viewportOffsetY = 0;
 		this.zoomFactor = 1;
 		this.fieldIMG = null;
-		this.selection = {
-			x: null,
-			y: null,
-			width: 1,
-			height: 1
-		};
-		this.prevTargetCell = { x: null, y: null };
+
+		this.canvasOffsetX = 0;
+		this.canvasOffsetY = 0;
+
+		// Canvas selection
+		this.selX = null;
+		this.selY = null;
+		this.selW = 1;
+		this.selH = 1;
+		this.selPrevX = null;
+		this.selPrevY = null;
 	}
 
 	componentDidMount() {
@@ -52,6 +57,7 @@ class Game extends React.Component {
 		field.addEventListener('wheel', this.onMouseScroll);
 		field.addEventListener('mousemove', this.onMouseMove);
 		field.addEventListener('mouseup', this.onMouseUp);
+		field.addEventListener('mousedown', this.onMouseDown);
 		document.addEventListener('keydown', this.onKeyDown);
 		window.addEventListener('resize', this.onWindowResize);
 	}
@@ -62,112 +68,126 @@ class Game extends React.Component {
 		field.removeEventListener('wheel', this.onMouseScroll);
 		field.removeEventListener('mousemove', this.onMouseMove);
 		field.removeEventListener('mouseup', this.onMouseUp);
+		field.removeEventListener('mousedown', this.onMouseDown);
 		document.removeEventListener('keydown', this.onKeyDown);
 		window.removeEventListener('resize', this.onWindowResize);
 		cancelAnimationFrame(this.RAFHandle);
 	}
 
 	setFieldPosition = (ox, oy) => {
-		const field = this.field.current;
+		const { width, height } = this.field.current;
 
-		// X
-		if (ox < 0) {
-			this.viewportOffsetX = 0;
-		}
-		else if (~~(field.width * this.zoomFactor) + ox > FIELD_WIDTH) {
-			this.viewportOffsetX = FIELD_WIDTH - ~~(field.width * this.zoomFactor);
-		}
-		else {
-			this.viewportOffsetX = ox;
-		}
+		this.canvasOffsetX = (ox < 0) ?
+			0 : (~~(ox + width * this.zoomFactor) > FIELD_WIDTH) ?
+			FIELD_WIDTH - ~~(width * this.zoomFactor) : ox;
 
-		// Y
-		if (oy < 0) {
-			this.viewportOffsetY = 0;
-		}
-		else if (~~(field.height * this.zoomFactor) + oy > FIELD_HEIGHT) {
-			this.viewportOffsetY = FIELD_HEIGHT - ~~(field.height * this.zoomFactor);
-		}
-		else {
-			this.viewportOffsetY = oy;
+		this.canvasOffsetY = (oy < 0) ?
+			0 : (~~(oy + height * this.zoomFactor) > FIELD_HEIGHT) ?
+			FIELD_HEIGHT - ~~(height * this.zoomFactor) : oy;
+	}
+
+	onMouseDown = (e) => {
+		const cellSize = CELL_SIZE / this.zoomFactor;
+		const cx = ~~((this.canvasOffsetX / this.zoomFactor + e.offsetX) / cellSize);
+		const cy = ~~((this.canvasOffsetY / this.zoomFactor + e.offsetY) / cellSize);
+
+		if ((cx >= 0 && cx < CELL_X) && (cy >= 0 && cy < CELL_Y)) {
+			this.selX = cx;
+			this.selY = cy;
 		}
 	}
 
 	onMouseUp = (e) => {
 		if (e.button === 0) {
 			e.target.style.cursor = 'default';
+
+			this.selY = this.selX = null;
+			this.selW = this.selH = 1;
+
+			this.isNeedRedraw = true;
 		}
 	}
 
 	onMouseMove = (e) => {
-		if (e.buttons === 1 && e.ctrlKey) { // Moving
-			this.targetCell.x = null;
-			this.targetCell.y = null;
-			e.target.style.cursor = 'move';
+		if (e.buttons === 1) {
+			if (e.ctrlKey) { // Moving
+				e.target.style.cursor = 'move';
 
-			this.setFieldPosition(this.viewportOffsetX - e.movementX, this.viewportOffsetY - e.movementY);
+				this.selX = this.selY = null;
+
+				this.setFieldPosition(this.canvasOffsetX - e.movementX, this.canvasOffsetY - e.movementY);
+			}
+			else { // Drawing
+				const cellSize = CELL_SIZE / this.zoomFactor;
+				const newCellX = ~~((this.canvasOffsetX / this.zoomFactor + e.offsetX) / cellSize);
+				const newCellY = ~~((this.canvasOffsetY / this.zoomFactor + e.offsetY) / cellSize);
+
+				if ((newCellX >= 0 && newCellX < CELL_X) && (newCellY >= 0 && newCellY < CELL_Y)) {
+					if (this.selPrevX !== newCellX || this.selPrevY !== newCellY) {
+						const deltaX = newCellX - this.selX;
+						const deltaY = newCellY - this.selY;
+
+						this.selW = deltaX < 0 ? deltaX - 1 : deltaX + 1;
+						this.selH = deltaY < 0 ? deltaY - 1 : deltaY + 1;
+
+						this.selPrevX = newCellX;
+						this.selPrevY = newCellY;
+					}
+				}
+			}
+			this.isNeedRedraw = true;
+		}
+
+
+		/* if (e.buttons === 1 && e.ctrlKey) { // Moving
+			
 		}
 		else {
 			const px2cell = (viewportOffset, mouseOffset) => ~~((viewportOffset + mouseOffset) / (CELL_SIZE / this.zoomFactor));
 			const newCellX = px2cell(this.viewportOffsetX, e.offsetX);
 			const newCellY = px2cell(this.viewportOffsetY, e.offsetY);
 
-			// ======================================
-			// NOT COMPLETED
-			// ======================================
-			if (e.buttons === 1) { // Resize highlight
-				if (newCellX !== this.prevTargetCell.x || newCellY !== this.prevTargetCell.y) {
-					if (this.prevTargetCell.x !== null && this.prevTargetCell.y !== null) {
-						let deltaX = newCellX - this.selection.x;
-						let deltaY = newCellY - this.selection.y;
+			if ((newCellX >= 0 && newCellX < CELL_X) && (newCellY >= 0 && newCellY < CELL_Y)) {
+				if (e.buttons === 1) { // Resize highlight
+					if (newCellX !== this.prevTargetCell.x || newCellY !== this.prevTargetCell.y) {
+						if (this.prevTargetCell.x !== null && this.prevTargetCell.y !== null) {
+							let deltaX = newCellX - this.selection.x;
+							let deltaY = newCellY - this.selection.y;
 
-						this.selection.width = deltaX < 0 ? deltaX - 1 : deltaX + 1;
-						this.selection.height = deltaY < 0 ? deltaY - 1 : deltaY + 1;
+							this.selection.width = deltaX < 0 ? deltaX - 1 : deltaX + 1;
+							this.selection.height = deltaY < 0 ? deltaY - 1 : deltaY + 1;
+						}
+						this.prevTargetCell.x = newCellX;
+						this.prevTargetCell.y = newCellY;
 					}
-					this.prevTargetCell.x = newCellX;
-					this.prevTargetCell.y = newCellY;
+				}
+				else { // Draw highlight
+					this.selection.x = newCellX;
+					this.selection.y = newCellY;
+					this.selection.width = 1;
+					this.selection.height = 1;
 				}
 			}
-			else { // Draw highlight
-				this.selection.x = newCellX;
-				this.selection.y = newCellY;
-				this.selection.width = 1;
-				this.selection.height = 1;
-			}
-		}
-
-		this.isNeedRedraw = true;
+		} */
 	}
 
 	onMouseScroll = (e) => {
-		this.selection.x = null;
-		this.selection.y = null;
+		this.selX = this.selY = null;
 
-		const zoomStep = 0.05;
+		const field = this.field.current;
+		const maxZoom = Math.min(FIELD_WIDTH / field.width, FIELD_HEIGHT / field.height);
+		const zoomStep = (maxZoom - MIN_ZOOM) / ZOOM_STEPS;
 		const zoomDir = e.deltaY > 0 ? 1 : -1;
-		const newZoom = zoomDir * zoomStep;
+		const newZoom = zoomStep * zoomDir;
+		const nextZoom = this.zoomFactor + newZoom;
 
-		if (this.zoomFactor + newZoom > 1) {
-			const field = this.field.current;
-			const newOffsetX = this.viewportOffsetX - e.offsetX * newZoom;
-			const newOffsetY = this.viewportOffsetY - e.offsetY * newZoom;
+		if (nextZoom >= MIN_ZOOM && nextZoom <= maxZoom) {
+			this.zoomFactor = nextZoom;
 
-			if ((field.width <= Math.round(FIELD_WIDTH / (this.zoomFactor + newZoom))) && (field.height <= Math.round(FIELD_HEIGHT / (this.zoomFactor + newZoom)))) {
-				this.zoomFactor += newZoom;
-				this.setFieldPosition(newOffsetX, newOffsetY);
-			}
-			else {
-				// X axis zoom correction
-				if ((this.zoomFactor + zoomStep) * field.width >= FIELD_WIDTH) {
-					this.zoomFactor = FIELD_WIDTH / field.width;
-				}
-
-				// Y axis zoom correction
-				if ((this.zoomFactor + zoomStep) * field.height >= FIELD_HEIGHT) {
-					this.zoomFactor = FIELD_HEIGHT / field.height;
-				}
-			}
-
+			const newOffsetX = this.canvasOffsetX - e.offsetX * newZoom;
+			const newOffsetY = this.canvasOffsetY - e.offsetY * newZoom;
+			this.setFieldPosition(newOffsetX, newOffsetY);
+			
 			this.isNeedRedraw = true;
 		}
 	}
@@ -237,22 +257,24 @@ class Game extends React.Component {
 			const ctx = field.getContext('2d');
 
 			ctx.clearRect(0, 0, field.width, field.height);
-			ctx.drawImage(this.fieldIMG, this.viewportOffsetX, this.viewportOffsetY, field.width * this.zoomFactor, field.height * this.zoomFactor, 0, 0, field.width, field.height);
+			ctx.drawImage(this.fieldIMG, this.canvasOffsetX, this.canvasOffsetY, field.width * this.zoomFactor, field.height * this.zoomFactor, 0, 0, field.width, field.height);
 		
 			// Highlighting area under the cursor
-			const tc = this.selection;
-			if (tc.x !== null && tc.y !== null) {
+			const { selX, selY, selW, selH } = this;
+			if (selX !== null && selY !== null) {
 				ctx.save();
 				ctx.strokeStyle = '#3dbbd1';
 				ctx.lineWidth = 2;
 
-				const px = (tc.x * CELL_SIZE / this.zoomFactor) - this.viewportOffsetX;
-				const py = (tc.y * CELL_SIZE / this.zoomFactor) - this.viewportOffsetY; 
+				const cellSize = CELL_SIZE / this.zoomFactor;
+				const px = selX * cellSize - this.canvasOffsetX / this.zoomFactor;
+				const py = selY * cellSize - this.canvasOffsetY / this.zoomFactor; 
+
 				ctx.strokeRect(
-					this.selection.width < 0 ? px + 20 : px,
-					this.selection.height < 0 ? py + 20 : py,
-					tc.width * CELL_SIZE / this.zoomFactor,
-					tc.height * CELL_SIZE / this.zoomFactor
+					selW < 0 ? px + cellSize : px,
+					selH < 0 ? py + cellSize : py,
+					selW * cellSize,
+					selH * cellSize
 				);
 				ctx.restore();
 			}
