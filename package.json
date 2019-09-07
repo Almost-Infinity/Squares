@@ -3,10 +3,11 @@
 	"name": "squares",
 	"scripts": {
 		"test": "jest",
-		"lint": "eslint .",
-		"start": "set NODE_ENV=development&&webpack-dev-server",
-		"build": "set NODE_ENV=production&&webpack -p",
-		"build-dev": "set NODE_ENV=development&&webpack -d"
+		"start": "set NODE_ENV=development&&webpack-dev-server --config webpack.client.js",
+		"build-prod": "set NODE_ENV=production&&webpack -p --config webpack.client.js",
+		"build-dev": "set NODE_ENV=development&&webpack -d --config webpack.client.js",
+		"build-server": "webpack -p --watch --config webpack.server.js",
+		"serve": "nodemon ./build/app.js"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.5.5",
@@ -61,8 +62,7 @@
 		"react": "^16.8.6",
 		"react-dom": "^16.8.6",
 		"react-router": "^4.3.1",
-		"react-router-dom": "^4.3.1",
-		"serve-favicon": "^2.5.0"
+		"react-router-dom": "^4.3.1"
 	},
 	"browserslist": [
 		"> 0.2%",

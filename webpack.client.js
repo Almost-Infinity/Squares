@@ -11,7 +11,7 @@ const TerserWebpackPlugin = require('terser-webpack-plugin');
 
 const isProduction = (process.env.NODE_ENV === 'production');
 
-const SOURCE_PATH = path.resolve(__dirname, 'source');
+const SOURCE_PATH = path.resolve(__dirname, 'source', 'client');
 const BUILD_PATH = path.resolve(__dirname, 'build');
 
 module.exports = {
@@ -143,7 +143,7 @@ module.exports = {
 	resolve: {
 		extensions: [ '.wasm', '.mjs', '.js', '.jsx', '.json' ],
 		alias: {
-			Components: path.resolve(__dirname, 'source/components/')
+			Components: path.resolve(__dirname, 'source/client/components/')
 		}
 	},
 
