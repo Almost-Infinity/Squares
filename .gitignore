@@ -10,11 +10,11 @@ pids
 *.pid.lock
 
 # Build directories
-build/**
-!build/config/
+build
+!build\config
 
 # Dependency directories
-node_modules/
+node_modules
 
 # Optional npm cache directory
 .npm
@@ -34,7 +34,7 @@ ehthumbs.db
 ehthumbs_vista.db
 
 # Recycle Bin used on file shares
-$RECYCLE.BIN/
+$RECYCLE.BIN
 
 # Windows desktop cfg
 [Dd]esktop.ini
@@ -43,6 +43,4 @@ $RECYCLE.BIN/
 *.lnk
 
 # Workspace files are user-specific
-*.sublime-workspace
-*.sublime-project
-.vscode/
+.vscode
