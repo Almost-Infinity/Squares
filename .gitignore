@@ -10,9 +10,8 @@ pids
 *.pid.lock
 
 # Build directories
-build/static/**
-build/*.html
-build/*.ico
+build/**
+!build/config/
 
 # Dependency directories
 node_modules/
