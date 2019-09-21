@@ -2,6 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
+import { sqPoolAdd } from 'Actions';
+
 import Square from './square';
 
 import styles from './styles.sass';
@@ -20,7 +22,8 @@ const ZOOM_STEPS = 10;
 
 class Game extends React.Component {
 	static propTypes = {
-		sqPool: PropTypes.arrayOf(PropTypes.instanceOf(Square)).isRequired
+		sqPool: PropTypes.arrayOf(PropTypes.instanceOf(Square)).isRequired,
+		addSquare: PropTypes.func.isRequired
 	};
 
 	constructor(props) {
@@ -36,13 +39,17 @@ class Game extends React.Component {
 		this.canvasOffsetX = 0;
 		this.canvasOffsetY = 0;
 
+		this.cursorX = 0;
+		this.cursorY = 0;
+
 		// Canvas selection
+		this.selInitialX = 0;
+		this.selInitialY = 0;
 		this.selX = null;
 		this.selY = null;
 		this.selW = 1;
 		this.selH = 1;
-		this.selPrevX = null;
-		this.selPrevY = null;
+		this.isIntersected = false;
 	}
 
 	componentDidMount() {
@@ -58,6 +65,7 @@ class Game extends React.Component {
 		field.addEventListener('mousemove', this.onMouseMove);
 		field.addEventListener('mouseup', this.onMouseUp);
 		field.addEventListener('mousedown', this.onMouseDown);
+		field.addEventListener('mouseout', this.onMouseOut);
 		document.addEventListener('keydown', this.onKeyDown);
 		window.addEventListener('resize', this.onWindowResize);
 	}
@@ -69,6 +77,7 @@ class Game extends React.Component {
 		field.removeEventListener('mousemove', this.onMouseMove);
 		field.removeEventListener('mouseup', this.onMouseUp);
 		field.removeEventListener('mousedown', this.onMouseDown);
+		field.removeEventListener('mouseout', this.onMouseOut);
 		document.removeEventListener('keydown', this.onKeyDown);
 		window.removeEventListener('resize', this.onWindowResize);
 		cancelAnimationFrame(this.RAFHandle);
@@ -86,20 +95,27 @@ class Game extends React.Component {
 			FIELD_HEIGHT - ~~(height * this.zoomFactor) : oy;
 	}
 
-	onMouseDown = (e) => {
-		const cellSize = CELL_SIZE / this.zoomFactor;
-		const cx = ~~((this.canvasOffsetX / this.zoomFactor + e.offsetX) / cellSize);
-		const cy = ~~((this.canvasOffsetY / this.zoomFactor + e.offsetY) / cellSize);
+	onMouseDown = () => {
+		this.selInitialX = this.cursorX;
+		this.selInitialY = this.cursorY;
 
-		if ((cx >= 0 && cx < CELL_X) && (cy >= 0 && cy < CELL_Y)) {
-			this.selX = cx;
-			this.selY = cy;
-		}
+		this.isNeedRedraw = true;
 	}
 
 	onMouseUp = (e) => {
-		if (e.button === 0) {
+		if (e.button === 0) { // LMB
 			e.target.style.cursor = 'default';
+
+			if (!this.isIntersected && !e.ctrlKey) {
+				this.props.addSquare({
+					x: this.selX || this.selInitialX,
+					y: this.selY || this.selInitialY,
+					w: this.selW,
+					h: this.selH,
+					c: 'tomato'
+				});
+				this.generateField();
+			}
 
 			this.selY = this.selX = null;
 			this.selW = this.selH = 1;
@@ -109,6 +125,18 @@ class Game extends React.Component {
 	}
 
 	onMouseMove = (e) => {
+		let { cursorX, cursorY } = this;
+
+		// Watching the cursor pos
+		const cellSize = CELL_SIZE / this.zoomFactor;
+		const cx = ~~((this.canvasOffsetX / this.zoomFactor + e.offsetX) / cellSize);
+		const cy = ~~((this.canvasOffsetY / this.zoomFactor + e.offsetY) / cellSize);
+		if ((cx >= 0 && cx < CELL_X) && (cy >= 0 && cy < CELL_Y)) {
+			this.cursorX = cx;
+			this.cursorY = cy;
+		}
+
+		// Handling
 		if (e.buttons === 1) {
 			if (e.ctrlKey) { // Moving
 				e.target.style.cursor = 'move';
@@ -118,57 +146,27 @@ class Game extends React.Component {
 				this.setFieldPosition(this.canvasOffsetX - e.movementX, this.canvasOffsetY - e.movementY);
 			}
 			else { // Drawing
-				const cellSize = CELL_SIZE / this.zoomFactor;
-				const newCellX = ~~((this.canvasOffsetX / this.zoomFactor + e.offsetX) / cellSize);
-				const newCellY = ~~((this.canvasOffsetY / this.zoomFactor + e.offsetY) / cellSize);
+				e.target.style.cursor = 'crosshair';
 
-				if ((newCellX >= 0 && newCellX < CELL_X) && (newCellY >= 0 && newCellY < CELL_Y)) {
-					if (this.selPrevX !== newCellX || this.selPrevY !== newCellY) {
-						const deltaX = newCellX - this.selX;
-						const deltaY = newCellY - this.selY;
+				const minX = Math.min(this.selInitialX, cursorX);
+				const minY = Math.min(this.selInitialY, cursorY);
 
-						this.selW = deltaX < 0 ? deltaX - 1 : deltaX + 1;
-						this.selH = deltaY < 0 ? deltaY - 1 : deltaY + 1;
+				const maxX = Math.max(this.selInitialX, cursorX);
+				const maxY = Math.max(this.selInitialY, cursorY);
 
-						this.selPrevX = newCellX;
-						this.selPrevY = newCellY;
+				this.selX = minX;
+				this.selY = minY;
+				this.selW = maxX - minX + 1;
+				this.selH = maxY - minY + 1;
+
+				for (let s of this.props.sqPool) {
+					if ((this.isIntersected = s.haveIntersection(minX, minY, this.selW, this.selH))) {
+						break;
 					}
 				}
 			}
 			this.isNeedRedraw = true;
 		}
-
-
-		/* if (e.buttons === 1 && e.ctrlKey) { // Moving
-			
-		}
-		else {
-			const px2cell = (viewportOffset, mouseOffset) => ~~((viewportOffset + mouseOffset) / (CELL_SIZE / this.zoomFactor));
-			const newCellX = px2cell(this.viewportOffsetX, e.offsetX);
-			const newCellY = px2cell(this.viewportOffsetY, e.offsetY);
-
-			if ((newCellX >= 0 && newCellX < CELL_X) && (newCellY >= 0 && newCellY < CELL_Y)) {
-				if (e.buttons === 1) { // Resize highlight
-					if (newCellX !== this.prevTargetCell.x || newCellY !== this.prevTargetCell.y) {
-						if (this.prevTargetCell.x !== null && this.prevTargetCell.y !== null) {
-							let deltaX = newCellX - this.selection.x;
-							let deltaY = newCellY - this.selection.y;
-
-							this.selection.width = deltaX < 0 ? deltaX - 1 : deltaX + 1;
-							this.selection.height = deltaY < 0 ? deltaY - 1 : deltaY + 1;
-						}
-						this.prevTargetCell.x = newCellX;
-						this.prevTargetCell.y = newCellY;
-					}
-				}
-				else { // Draw highlight
-					this.selection.x = newCellX;
-					this.selection.y = newCellY;
-					this.selection.width = 1;
-					this.selection.height = 1;
-				}
-			}
-		} */
 	}
 
 	onMouseScroll = (e) => {
@@ -190,6 +188,11 @@ class Game extends React.Component {
 			
 			this.isNeedRedraw = true;
 		}
+	}
+
+	onMouseOut = () => {
+		this.selY = this.selX = null;
+		this.selW = this.selH = 1;
 	}
 
 	onWindowResize = () => {
@@ -263,7 +266,7 @@ class Game extends React.Component {
 			const { selX, selY, selW, selH } = this;
 			if (selX !== null && selY !== null) {
 				ctx.save();
-				ctx.strokeStyle = '#3dbbd1';
+				ctx.strokeStyle = this.isIntersected ? '#d13d3d' : '#3dbbd1';
 				ctx.lineWidth = 2;
 
 				const cellSize = CELL_SIZE / this.zoomFactor;
@@ -292,4 +295,11 @@ const mapStateToProps = (state) => ({
   sqPool: state.squaresPool
 });
 
-export default connect(mapStateToProps)(Game);
+const mapDispatchToProps = (dispatch) => ({
+	addSquare: (square) => dispatch(sqPoolAdd(square))
+});
+
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(Game);
