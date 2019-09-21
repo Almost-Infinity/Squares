@@ -143,7 +143,8 @@ module.exports = {
 	resolve: {
 		extensions: [ '.wasm', '.mjs', '.js', '.jsx', '.json' ],
 		alias: {
-			Components: path.resolve(__dirname, 'source/client/components/')
+			Components: path.resolve(SOURCE_PATH, 'components'),
+			Actions: path.resolve(SOURCE_PATH, 'actions')
 		}
 	},
 
