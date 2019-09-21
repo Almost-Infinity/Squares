@@ -20,7 +20,7 @@ module.exports = {
 	devtool: isProduction ? 'source-map' : 'inline-source-map',
 	stats: 'minimal',
 
-	entry: SOURCE_PATH + '/index.js',
+	entry: SOURCE_PATH + '/index.jsx',
 	output: {
 		path: BUILD_PATH,
 		filename: isProduction ? 'static/scripts/squares.[hash:8].js' : 'static/scripts/squares.js',

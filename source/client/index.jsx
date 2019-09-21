@@ -1,11 +1,12 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { render } from 'react-dom';
-import { createStore } from 'redux';
+import { createStore, compose, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
-import { gameReducer } from './reducers/game';
+import thunk from 'redux-thunk';
+import { initialState, gameReducer } from './reducers/game';
 
-import Layout from './components/layout';
+import Layout from 'Components/layout';
 
 import { routes } from './routes';
 
@@ -21,7 +22,11 @@ window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequest
 
 const store = createStore(
 	gameReducer,
-	DEVBUILD && window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+	initialState,
+	compose(
+		applyMiddleware(thunk),
+		DEVBUILD && window.__REDUX_DEVTOOLS_EXTENSION__ ? window.__REDUX_DEVTOOLS_EXTENSION__() : (f) => f,
+	)
 );
 
 render(
