@@ -1,9 +1,9 @@
 import React from 'react';
 import { Switch } from 'react-router-dom';
 
-import RouteEx from './components/routing';
-import Lobbies from './components/lobbies-list';
-import Game from './components/game';
+import RouteEx from 'Components/routing';
+import Lobbies from 'Components/lobbies-list';
+import Game from 'Components/game';
 
 export const routes = (
   <Switch>
