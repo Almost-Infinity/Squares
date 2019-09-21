@@ -12,11 +12,12 @@ const initialState = {
 export const gameReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'SQ_POOL_ADD': {
+      const { x, y, w, h, c } = action.sqObject;
       return {
         ...state,
         squaresPool: [
           ...state.squaresPool,
-          new Square({ x: action.x, y: action.y}, { w: action.w, h: action.h }, action.c)
+          new Square({ x, y }, { w, h }, c)
         ]
       };
     }
