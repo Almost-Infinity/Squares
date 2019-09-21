@@ -291,10 +291,7 @@ class Game extends React.Component {
 	}
 }
 
-const mapStateToProps = (state) => ({
-  sqPool: state.squaresPool
-});
-
+const mapStateToProps = (state) => ({ sqPool: state.squaresPool });
 const mapDispatchToProps = (dispatch) => ({
 	addSquare: (square) => dispatch(sqPoolAdd(square))
 });
