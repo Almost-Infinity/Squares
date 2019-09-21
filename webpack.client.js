@@ -156,7 +156,7 @@ module.exports = {
 			clear: true
 		}),
 		isProduction && new CleanWebpackPlugin({
-			cleanOnceBeforeBuildPatterns: [ 'static', '**/*.html' ],
+			cleanOnceBeforeBuildPatterns: [ '*', '!config', '!app.js' ],
 			verbose: false
 		}),
 		!isProduction && new webpack.HotModuleReplacementPlugin(),
@@ -175,7 +175,8 @@ module.exports = {
 				minifyURLs: true
 			},
 			filename: './index.html',
-			template: SOURCE_PATH + '/views/index_template.html'
+			template: SOURCE_PATH + '/views/index_template.html',
+			favicon: SOURCE_PATH + '/img/favicon.ico'
 		}),
 		isProduction && new MiniCssExtractPlugin({
 			filename: isProduction ? 'static/styles/squares.[contenthash:8].css' : 'static/styles/squares.css',
