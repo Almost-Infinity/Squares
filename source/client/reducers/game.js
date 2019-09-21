@@ -1,6 +1,6 @@
-import Square from "../components/game/square";
+import Square from 'Components/game/square';
 
-const initialState = {
+export const initialState = {
   squaresPool: [
     new Square({ x: 0, y: 0 }, { w: 10, h: 10 }, 'red'),
     new Square({ x: 20, y: 5 }, { w: 20, h: 10 }, 'green'),
@@ -9,17 +9,16 @@ const initialState = {
   ]
 };
 
-export const gameReducer = (state = initialState, action) => {
+export const gameReducer = (state, action) => {
   switch (action.type) {
     case 'SQ_POOL_ADD': {
       const { x, y, w, h, c } = action.sqObject;
-      return {
-        ...state,
+      return Object.assign({}, state, {
         squaresPool: [
           ...state.squaresPool,
           new Square({ x, y }, { w, h }, c)
         ]
-      };
+      });
     }
     default: {
       return state;
