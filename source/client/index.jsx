@@ -4,7 +4,8 @@ import { render } from 'react-dom';
 import { createStore, compose, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
-import { initialState, gameReducer } from './reducers/game';
+import { gameReducer } from './reducers/game';
+import initialState from './reducers/initialState';
 
 import Layout from 'Components/layout';
 
