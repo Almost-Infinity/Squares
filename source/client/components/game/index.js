@@ -193,6 +193,7 @@ class Game extends React.Component {
 	onMouseOut = () => {
 		this.selY = this.selX = null;
 		this.selW = this.selH = 1;
+		this.isNeedRedraw = true;
 	}
 
 	onWindowResize = () => {
@@ -225,11 +226,11 @@ class Game extends React.Component {
 		const ctx = document.createElement('canvas').getContext('2d');
 		ctx.canvas.width = FIELD_WIDTH;
 		ctx.canvas.height = FIELD_HEIGHT;
-
+		
+		// Draw grid
 		ctx.lineWidth = 1;
 		ctx.strokeStyle = 'rgba(153, 153, 153, .5)';
-
-		// Draw grid
+		
 		ctx.beginPath();
 		for (let i = 1; i < CELL_X; i++) { // Vertical lines
 			ctx.moveTo(CELL_SIZE * i, 0);
@@ -245,12 +246,26 @@ class Game extends React.Component {
 		// Draw squares
 		for (let s of this.props.sqPool) {
 			ctx.fillStyle = s.color;
-			ctx.fillRect(s.pos.x * CELL_SIZE, s.pos.y * CELL_SIZE, s.size.w * CELL_SIZE, s.size.h * CELL_SIZE);
+			ctx.strokeStyle = '#333';
+			ctx.lineWidth = 1;
+			ctx.beginPath();
+			ctx.rect(s.pos.x * CELL_SIZE, s.pos.y * CELL_SIZE, s.size.w * CELL_SIZE, s.size.h * CELL_SIZE);
 			ctx.fill();
+			ctx.stroke();
+
+			ctx.fillStyle = '#333';
+			ctx.font = 'bold 16px Roboto';
+			ctx.textBaseline = 'middle';
+			ctx.textAlign = 'center';
+			ctx.fillText(
+				`${s.size.w * s.size.h}`, 
+				(s.pos.x + (s.size.w / 2)) * CELL_SIZE,
+				(s.pos.y + (s.size.h / 2)) * CELL_SIZE
+			);
 		}
 	
 		this.fieldIMG = new Image();
-		this.fieldIMG.src = ctx.canvas.toDataURL("image/png");
+		this.fieldIMG.src = ctx.canvas.toDataURL('image/png');
 	}
 
 	update = () => {
