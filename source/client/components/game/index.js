@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 import { sqPoolAdd } from 'Actions';
 
+import Overlay from '../overlay';
 import Square from './square';
 
 import styles from './styles.sass';
@@ -50,6 +51,10 @@ class Game extends React.Component {
 		this.selW = 1;
 		this.selH = 1;
 		this.isIntersected = false;
+
+		this.state = {
+			isScoreboardShown: false
+		};
 	}
 
 	componentDidMount() {
@@ -216,9 +221,19 @@ class Game extends React.Component {
 	}
 
 	onKeyDown = (e) => {
-		if (e.keyCode === 121) { // F10
-			e.preventDefault();
-			this.field.current.requestFullscreen();
+		switch (e.keyCode) {
+			case 121: { // F10
+				e.preventDefault();
+				this.field.current.requestFullscreen();
+				break;
+			}
+			case 9: { // Tab
+				e.preventDefault();
+				this.setState((state) =>
+					({ isScoreboardShown: !state.isScoreboardShown })
+				);
+				break;
+			}
 		}
 	}
 
@@ -302,7 +317,16 @@ class Game extends React.Component {
 	}
 
 	render() {
-		return <canvas ref={ this.field } className={ styles.field }></canvas>;
+		return (
+			<React.Fragment>
+				<canvas ref={ this.field } className={ styles.field }></canvas>
+				{ this.state.isScoreboardShown &&
+					<Overlay>
+						
+					</Overlay>
+				}
+			</React.Fragment>
+		);
 	}
 }
 
