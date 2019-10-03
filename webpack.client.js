@@ -121,7 +121,7 @@ module.exports = {
 				}
 			}]
 		}, {
-			test: /\.(png|jpe?g|gif|svg)$/,
+			test: /\.(png|jpe?g|gif)$/,
 			use: [{
 				loader: isProduction ? 'file-loader' : 'url-loader',
 				options: {
@@ -137,6 +137,14 @@ module.exports = {
 					gifsicle: { interlaced: false }
 				}
 			}]
+		}, {
+			test: /\.svg$/,
+			use: {
+				loader: 'url-loader',
+				options: {
+					mimetype: 'image/svg+xml'
+				}
+			}
 		}]
 	},
 
