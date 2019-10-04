@@ -4,7 +4,7 @@ import { render } from 'react-dom';
 import { createStore, compose, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
-import { gameReducer } from './reducers/game';
+import reducers from './reducers';
 import initialState from './reducers/initialState';
 
 import Layout from 'Components/layout';
@@ -22,7 +22,7 @@ window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequest
 	window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
 
 const store = createStore(
-	gameReducer,
+	reducers,
 	initialState,
 	compose(
 		applyMiddleware(thunk),

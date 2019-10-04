@@ -1,4 +1,2 @@
-export const sqPoolAdd = (sqObject) => ({
-  type: 'SQ_POOL_ADD',
-  sqObject
-});
+export { sqPoolAdd } from './game';
+export { fetchLobbies } from './lobbies-list';
