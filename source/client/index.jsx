@@ -1,25 +1,23 @@
-import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
-import { render } from 'react-dom';
-import { createStore, compose, applyMiddleware } from 'redux';
-import { Provider } from 'react-redux';
-import thunk from 'redux-thunk';
-import reducers from './reducers';
-import initialState from './reducers/initialState';
-
-import Layout from 'Components/layout';
-
-import { routes } from './routes';
+import React 												from 'react';
+import { render } 									from 'react-dom';
+import thunk 												from 'redux-thunk';
+import {
+	createStore,
+	compose,
+	applyMiddleware
+} 																	from 'redux';
+import { Provider } 								from 'react-redux';
+import { BrowserRouter as Router }	from 'react-router-dom';
+import { routes } 									from './routes';
+import reducers 										from './reducers';
+import initialState 								from './reducers/initialState';
 
 import './sass/main.sass';
 
-const rootElement = document.getElementById('squares');
-if (rootElement === null) {
-	throw new Error('No root element!');
-}
-
-window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
-	window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+window.requestAnimationFrame = 	window.requestAnimationFrame ||
+																window.mozRequestAnimationFrame ||
+																window.webkitRequestAnimationFrame ||
+																window.msRequestAnimationFrame;
 
 const store = createStore(
 	reducers,
@@ -31,12 +29,10 @@ const store = createStore(
 );
 
 render(
-	<Provider store={store}>
-		<BrowserRouter>
-			<Layout>
-				{ routes }
-			</Layout>
-		</BrowserRouter>
+	<Provider store={ store }>
+		<Router>
+			{ routes }
+		</Router>
 	</Provider>,
-	rootElement
+	document.getElementById('squares')
 );
