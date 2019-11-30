@@ -1,5 +1,6 @@
 @import './variables.sass'
 @import './normalize.sass'
+@import './utils.sass'
 
 *
 	outline: none
@@ -16,3 +17,10 @@ body
 \:global(#squares)
 		overflow: hidden
 		height: inherit
+
+main
+	@extend .clearfix
+	box-sizing: border-box
+	width: $ui-page-width
+	height: calc(100% - 45px - 2em) // 45px - navbar height, 2em - sum of top and bottom layout margin
+	margin: 1em auto
