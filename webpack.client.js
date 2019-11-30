@@ -152,7 +152,8 @@ module.exports = {
 		extensions: [ '.wasm', '.mjs', '.js', '.jsx', '.json' ],
 		alias: {
 			Components: path.resolve(SOURCE_PATH, 'components'),
-			Actions: path.resolve(SOURCE_PATH, 'actions')
+			Actions: path.resolve(SOURCE_PATH, 'actions'),
+			Hooks: path.resolve(SOURCE_PATH, 'hooks')
 		}
 	},
 
