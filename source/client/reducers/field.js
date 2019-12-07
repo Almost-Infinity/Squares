@@ -10,7 +10,10 @@ export default (state = initialState, action) => {
     case SQUARE_POOL_ADD: {
       const { x, y, w, h, c } = action.square;
       return Object.assign({}, state, {
-        pool: new Square({ x, y }, { w, h }, c)
+        pool: [
+          ...state.pool,
+          new Square({ x, y }, { w, h }, c)
+        ]
       });
     }
     default: {
