@@ -1,18 +1,15 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import React          from 'react';
+import { connect }    from 'react-redux';
+import PropTypes      from 'prop-types';
 
-import { sqPoolAdd } from 'Actions';
-import styles from './styles.sass';
+import { sqPoolAdd }  from 'Actions';
+import styles         from './styles.sass';
 
 const CELL_X = 256;
 const CELL_Y = ~~(CELL_X / 1.77); // 16:9
 const CELL_SIZE = 12; // px
 const FIELD_WIDTH = CELL_X * CELL_SIZE;
 const FIELD_HEIGHT = CELL_Y * CELL_SIZE;
-
-const MIN_ZOOM = 1;
-const ZOOM_STEPS = 5;
 
 class Game extends React.Component {
   static propTypes = {
@@ -24,24 +21,24 @@ class Game extends React.Component {
     super(props);
 
     this.field = null;
-    this.fieldIMG = null;
+    this.fieldLayerGrid = null;
+    this.fieldLayerSquares = null;
 
     this.RAFHandle = null;
     this.isNeedRedraw = true; // First render
 
     this.fieldOffsetX = 0;
     this.fieldOffsetY = 0;
-    this.fieldScale = 1;
   }
 
   componentDidMount() {
-    this.field = document.getElementsByClassName(styles.field)[0];
-    this.field.width = this.field.clientWidth;
-    this.field.height = this.field.parentElement.clientHeight;
+    this.field = document.getElementById('field');
+    this.field.width = this.field.parentElement.clientWidth;
+    this.field.height = this.field.parentElement.clientHeight - 45; // Header height
 
     this.RAFHandle = requestAnimationFrame(this.update);
     window.addEventListener('resize', this.onWindowResize);
-    this.generateField();
+    this.generateLayerGrid();
   }
 
   componentWillUnmount() {
@@ -50,18 +47,22 @@ class Game extends React.Component {
   }
 
   setFieldPosition = (x, y) => {
-    const maxOffsetX = FIELD_WIDTH - this.field.width * this.fieldScale;
-    const maxOffsetY = FIELD_HEIGHT - this.field.height * this.fieldScale;
+    const maxOffsetX = FIELD_WIDTH - this.field.width;
+    const maxOffsetY = FIELD_HEIGHT - this.field.height;
 
     this.fieldOffsetX = (x >= 0 && x <= maxOffsetX) ? x : this.fieldOffsetX;
     this.fieldOffsetY = (y >= 0 && y <= maxOffsetY) ? y : this.fieldOffsetY;
   }
 
   onWindowResize = () => {
-    this.field.width = this.field.clientWidth;
-    this.field.height = this.field.parentElement.clientHeight;
+    this.field.width = this.field.parentElement.clientWidth;
+    this.field.height = this.field.parentElement.clientHeight - 45; // Header height
 
+    const maxOffsetX = FIELD_WIDTH - this.field.width;
+    const maxOffsetY = FIELD_HEIGHT - this.field.height;
 
+    this.fieldOffsetX -= (this.fieldOffsetX > maxOffsetX) ? this.fieldOffsetX - maxOffsetX : 0;
+    this.fieldOffsetY -= (this.fieldOffsetY > maxOffsetY) ? this.fieldOffsetY - maxOffsetY : 0;
 
     this.isNeedRedraw = true;
   }
@@ -70,29 +71,11 @@ class Game extends React.Component {
     if (e.buttons & 1) { // LMB
       e.target.style.cursor = 'grabbing';
       this.setFieldPosition(
-        this.fieldOffsetX - e.movementX * this.fieldScale,
-        this.fieldOffsetY - e.movementY * this.fieldScale
+        this.fieldOffsetX - e.movementX,
+        this.fieldOffsetY - e.movementY
       );
       this.isNeedRedraw = true;
     }
-  }
-
-  onMouseWheel = (e) => {
-    const maxZoom = Math.min(FIELD_WIDTH / this.field.width, FIELD_HEIGHT / this.field.height);
-    const zoomStep = (maxZoom - MIN_ZOOM) / ZOOM_STEPS;
-    const zoomDir = e.deltaY > 0 ? 1 : -1;
-		const newZoom = zoomStep * zoomDir;
-		const nextZoom = this.fieldScale + newZoom;
-
-		if (nextZoom >= 1 && nextZoom <= maxZoom) {
-      this.fieldScale = nextZoom;
-      this.setFieldPosition(
-        this.fieldOffsetX - (e.clientX - e.target.offsetLeft) * newZoom,
-        this.fieldOffsetY - (e.clientY - e.target.offsetTop) * newZoom
-      );
-			this.isNeedRedraw = true;
-    }
-    console.log(this.fieldScale, FIELD_WIDTH / this.field.width, FIELD_HEIGHT / this.field.height);
   }
 
   onMouseUp = (e) => {
@@ -101,13 +84,10 @@ class Game extends React.Component {
     }
   }
 
-  generateField() {
+  generateLayerGrid() {
     const ctx = document.createElement('canvas').getContext('2d');
     ctx.canvas.width = FIELD_WIDTH;
     ctx.canvas.height = FIELD_HEIGHT;
-
-    // Draw grid
-    // ==============
     ctx.lineWidth = 1;
     ctx.strokeStyle = 'rgba(51, 55, 69, .25)';
 
@@ -121,10 +101,39 @@ class Game extends React.Component {
 			ctx.moveTo(0, CELL_SIZE * i);
 			ctx.lineTo(FIELD_WIDTH, CELL_SIZE * i);
 		}
-		ctx.stroke();
+    ctx.stroke();
 
-    this.fieldIMG = new Image();
-    this.fieldIMG.src = ctx.canvas.toDataURL('image/png');
+    this.fieldLayerGrid = new Image();
+    this.fieldLayerGrid.src = ctx.canvas.toDataURL('image/png');
+  }
+
+  generateLayerSquares() {
+    const ctx = document.createElement('canvas').getContext('2d');
+    ctx.canvas.width = FIELD_WIDTH;
+    ctx.canvas.height = FIELD_HEIGHT;
+
+		for (let s of this.props.sqPool.pool) {
+			ctx.fillStyle = s.color;
+			ctx.strokeStyle = '#333';
+			ctx.lineWidth = 1;
+			ctx.beginPath();
+			ctx.rect(s.pos.x * CELL_SIZE, s.pos.y * CELL_SIZE, s.size.w * CELL_SIZE, s.size.h * CELL_SIZE);
+			ctx.fill();
+			ctx.stroke();
+
+			ctx.fillStyle = '#333';
+			ctx.font = 'bold 16px Roboto';
+			ctx.textBaseline = 'middle';
+			ctx.textAlign = 'center';
+			ctx.fillText(
+				`${s.size.w * s.size.h}`, 
+				(s.pos.x + (s.size.w / 2)) * CELL_SIZE,
+				(s.pos.y + (s.size.h / 2)) * CELL_SIZE + 1 // 1 — vertical align correction
+      );
+    }
+
+    this.fieldLayerSquares = new Image();
+    this.fieldLayerSquares.src = ctx.canvas.toDataURL('image/png');
   }
 
   update = () => {
@@ -132,29 +141,32 @@ class Game extends React.Component {
       this.isNeedRedraw = false;
 
       const ctx = this.field.getContext('2d');
-      const maxOffsetX = FIELD_WIDTH - this.field.width * this.fieldScale;
-      const maxOffsetY = FIELD_HEIGHT - this.field.height * this.fieldScale;
-      if ((this.fieldOffsetX >= 0 && this.fieldOffsetX <= maxOffsetX) || (this.fieldOffsetY >= 0 && this.fieldOffsetY <= maxOffsetY)) {
-        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-        ctx.drawImage(
-          this.fieldIMG,
-          this.fieldOffsetX,
-          this.fieldOffsetY,
-          ctx.canvas.width * this.fieldScale,
-          ctx.canvas.height * this.fieldScale,
-          0, 0, ctx.canvas.width, ctx.canvas.height
-        );
-      }
+      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+      this.fieldLayerGrid !== null && ctx.drawImage(
+        this.fieldLayerGrid,
+        this.fieldOffsetX, this.fieldOffsetY,
+        ctx.canvas.width, ctx.canvas.height,
+        0, 0, ctx.canvas.width, ctx.canvas.height
+      );
+
+      this.fieldLayerSquares !== null && ctx.drawImage(
+        this.fieldLayerSquares,
+        this.fieldOffsetX, this.fieldOffsetY,
+        ctx.canvas.width, ctx.canvas.height,
+        0, 0, ctx.canvas.width, ctx.canvas.height
+      );
     }
+
     this.RAFHandle = requestAnimationFrame(this.update);
   }
 
   render() {
 		return (
       <canvas
+        id='field'
         className={ styles.field }
         onMouseMove={ this.onMouseMove }
-        onWheel={ this.onMouseWheel }
         onMouseUp={ this.onMouseUp }
       />
 		);
