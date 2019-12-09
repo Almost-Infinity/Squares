@@ -14,10 +14,16 @@ import initialState 								from './reducers/initialState';
 
 import './sass/main.sass';
 
-window.requestAnimationFrame = 	window.requestAnimationFrame ||
-																window.mozRequestAnimationFrame ||
-																window.webkitRequestAnimationFrame ||
-																window.msRequestAnimationFrame;
+// Get unprefixed rAF and cAF, if present
+const browserPrefixes = 'webkit moz'.split(' ');
+for (let i = 0; i < browserPrefixes.length; i++) {
+	if (window.requestAnimationFrame && window.cancelAnimationFrame) {
+		break;
+	}
+
+	window.requestAnimationFrame = window[`${browserPrefixes[i]}RequestAnimationFrame`];
+	window.cancelAnimationFrame = window[`${browserPrefixes[i]}CancelAnimationFrame`];
+}
 
 const store = createStore(
 	reducers,
