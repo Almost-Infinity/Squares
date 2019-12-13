@@ -66,12 +66,53 @@
 		"react-router": "^4.3.1",
 		"react-router-dom": "^5.1.2"
 	},
+	"babel": {
+		"presets": [
+			"@babel/preset-env",
+			"@babel/preset-react"
+		],
+		"plugins": [
+			"@babel/plugin-proposal-class-properties"
+		]
+	},
 	"browserslist": [
 		"> 0.2%",
 		"not dead",
 		"ie <= 11",
 		"not op_mini all"
 	],
+	"eslintConfig": {
+		"extends": [
+			"eslint:recommended",
+			"plugin:react/recommended"
+		],
+		"settings": {
+			"react": {
+				"pragma": "React",
+				"version": "detect"
+			}
+		},
+		"env": {
+			"browser": true,
+			"commonjs": true,
+			"node": true,
+			"es6": true
+		},
+		"parser": "babel-eslint",
+		"parserOptions": {
+			"sourceType": "module",
+			"allowImportExportEverywhere": false,
+			"codeFrame": true
+		},
+		"rules": {
+			"no-console": "off",
+			"curly": "warn",
+			"strict": 0
+		},
+		"globals": {
+			"DEVBUILD": "readonly"
+		}
+	},
 	"jest": {
 		"transform": {
 			"\\.jsx?$": "<rootDir>/node_modules/babel-jest"
