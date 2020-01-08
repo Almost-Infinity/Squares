@@ -26,7 +26,7 @@ module.exports = {
 		path: BUILD_PATH,
 		filename: 'app.js'
   },
-  
+
   externals: nodeModules,
 
   plugins: [

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { connect } 										from 'react-redux';
+import { connect } from 'react-redux';
 
-import { fetchLobbies } 							from 'Actions';
-import { lobbiesListType } 						from 'Types/props';
-import Icon 													from 'Components/Icon';
+import { fetchLobbies } from 'Actions';
+import { lobbiesListType } from 'Types/props';
+import Icon from 'Components/Icon';
 
-import style 													from './styles.sass';
+import style from './styles.sass';
 
 const thead = [
 	{ tag: 'id', title: '№', width: '5%' },
@@ -38,12 +38,10 @@ function Lobbies(props) {
 							.map((v, k) => {
 								return (
 									<th key={k} onClick={() => sortLobbiesList(v.tag)} width={v.width}>
-										{
-											v.tag && <Icon
+										{v.tag && <Icon
 												type={v.tag === sortType ? (sortDir ? 'sort-asc' : 'sort-desc') : 'sort'}
 												className={style.lobbiesListSortIcon}
-											/>
-										}
+											/>}
 										<span>{v.title}</span>
 									</th>
 								);
@@ -84,7 +82,7 @@ function Lobbies(props) {
 								</tr>
 							);
 						})
-				}
+					}
 			</tbody>
 		</table>
 	);

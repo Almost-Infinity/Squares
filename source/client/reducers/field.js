@@ -1,7 +1,7 @@
-import Square               from 'Components/Field/square';
+import Square from 'Components/Field/square';
 
-import { SQUARE_POOL_ADD }  from 'Types/actions';
-import initialState         from './initialState';
+import { SQUARE_POOL_ADD } from 'Types/actions';
+import initialState from './initialState';
 
 export default (state = initialState, action) => {
   switch (action.type) {

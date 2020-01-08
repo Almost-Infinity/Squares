@@ -1,6 +1,6 @@
-import React, { useEffect }   from 'react';
-import { Route }              from 'react-router-dom';
-import { routeExType }        from 'Types/props';
+import React, { useEffect } from 'react';
+import { Route } from 'react-router-dom';
+import { routeExType } from 'Types/props';
 
 const RouteWrap = (Component, props) => <Component {...props} />;
 

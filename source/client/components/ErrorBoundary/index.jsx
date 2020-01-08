@@ -1,12 +1,12 @@
-import React                  from 'react';
-import { errorBoundaryType }  from 'Types/props';
-import Icon                   from 'Components/Icon';
+import React from 'react';
+import { errorBoundaryType } from 'Types/props';
+import Icon from 'Components/Icon';
 
 import styles from './styles.sass';
 
 export default class ErrorBoundary extends React.Component {
   static propTypes = errorBoundaryType;
-  
+
   constructor(props) {
     super(props);
 
