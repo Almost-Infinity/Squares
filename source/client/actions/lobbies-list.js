@@ -1,10 +1,10 @@
-import axios      from 'axios';
+import axios from 'axios';
 
 import {
   REQUEST_LOBBIES,
   RECEIVE_LOBBIES,
   RECEIVE_FAILED
-}                 from 'Types/actions';
+} from 'Types/actions';
 
 const requestLobbies = () => ({
   type: REQUEST_LOBBIES
@@ -26,7 +26,7 @@ export const fetchLobbies = () => {
     return axios.get('https://api.myjson.com/bins/12iq15')
       .then((res) => dispatch(receiveLobbies(res.data.lobbies)))
       .catch((err) => dispatch(receiveFailed(err)));
-  }; 
+  };
 };
 
 /*

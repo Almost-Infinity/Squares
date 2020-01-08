@@ -1,13 +1,13 @@
-import React        from 'react';
-import { Switch }   from 'react-router-dom';
-import RouteEx      from 'Components/RouteEx';
-import Header       from 'Components/Header';
-import Lobbies      from 'Components/LobbiesList';
-import Field        from 'Components/Field';
+import React from 'react';
+import { Switch } from 'react-router-dom';
+import RouteEx from 'Components/RouteEx';
+import Header from 'Components/Header';
+import Lobbies from 'Components/LobbiesList';
+import Field from 'Components/Field';
 
 const WrappedRoute = ({ ...rest }) => (
   <main>
-    <RouteEx { ...rest } />
+    <RouteEx {...rest} />
   </main>
 );
 

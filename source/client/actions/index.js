@@ -1,2 +1,2 @@
-export { sqPoolAdd }      from './field';
-export { fetchLobbies }   from './lobbies-list';
+export { sqPoolAdd } from './field';
+export { fetchLobbies } from './lobbies-list';

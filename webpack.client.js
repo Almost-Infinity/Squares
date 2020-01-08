@@ -65,7 +65,7 @@ module.exports = {
 			exclude: /node_modules/,
 			loader: 'eslint-loader',
 			options: {
-				fix: false,
+				fix: true,
 				cache: false,
 				eslintPath: require.resolve('eslint')
 			}
