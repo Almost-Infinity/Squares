@@ -12,18 +12,9 @@ import { routes } 									from './routes';
 import reducers 										from './reducers';
 import initialState 								from './reducers/initialState';
 
+import ErrorBoundary								from 'Components/ErrorBoundary';
+
 import './sass/main.sass';
-
-// Get unprefixed rAF and cAF, if present
-const browserPrefixes = 'webkit moz'.split(' ');
-for (let i = 0; i < browserPrefixes.length; i++) {
-	if (window.requestAnimationFrame && window.cancelAnimationFrame) {
-		break;
-	}
-
-	window.requestAnimationFrame = window[`${browserPrefixes[i]}RequestAnimationFrame`];
-	window.cancelAnimationFrame = window[`${browserPrefixes[i]}CancelAnimationFrame`];
-}
 
 const store = createStore(
 	reducers,
@@ -35,10 +26,12 @@ const store = createStore(
 );
 
 render(
-	<Provider store={ store }>
-		<Router>
-			{ routes }
-		</Router>
+	<Provider store={store}>
+		<ErrorBoundary>
+			<Router>
+				{routes}
+			</Router>
+		</ErrorBoundary>
 	</Provider>,
 	document.getElementById('squares')
 );

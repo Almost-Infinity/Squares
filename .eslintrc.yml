@@ -23,6 +23,7 @@ parserOptions:
 
 rules:
   no-await-in-loop: error
+  no-console: off
   curly: warn
   strict: 0
   eqeqeq: error

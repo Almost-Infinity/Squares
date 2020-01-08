@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import style from './styles.sass';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { connect } 										from 'react-redux';
 
-import { fetchLobbies } from 'Actions';
+import { fetchLobbies } 							from 'Actions';
+import { lobbiesListType } 						from 'Types/props';
+import Icon 													from 'Components/Icon';
 
-import sort from '../../img/icons/sort.svg';
-import sortAsc from '../../img/icons/sortAsc.svg';
-import sortDesc from '../../img/icons/sortDesc.svg';
-import locked from '../../img/icons/locked.svg';
-import unlocked from '../../img/icons/unlocked.svg';
+import style 													from './styles.sass';
 
 const thead = [
 	{ tag: 'id', title: '№', width: '5%' },
@@ -34,21 +30,21 @@ function Lobbies(props) {
 	}
 
 	return (
-		<table className={ style.lobbiesListList } width='100%' cellSpacing='0' border='1' rules='rows'>
+		<table className={style.lobbiesListList} width='100%' cellSpacing='0' border='1' rules='rows'>
 			<thead>
 				<tr>
 					{
 						thead
 							.map((v, k) => {
 								return (
-									<th key={ k } onClick={ () => sortLobbiesList(v.tag) } width={ v.width }>
-										<span
-											className={ style.lobbiesListSortIcon }
-											style={{
-												backgroundImage: `url(${ v.tag && (v.tag === sortType ? (sortDir ? sortAsc : sortDesc) : sort) })`
-											}}
-										/>
-										<span>{ v.title }</span>
+									<th key={k} onClick={() => sortLobbiesList(v.tag)} width={v.width}>
+										{
+											v.tag && <Icon
+												type={v.tag === sortType ? (sortDir ? 'sort-asc' : 'sort-desc') : 'sort'}
+												className={style.lobbiesListSortIcon}
+											/>
+										}
+										<span>{v.title}</span>
 									</th>
 								);
 							})
@@ -68,20 +64,22 @@ function Lobbies(props) {
 						})
 						.map((v, k) => {
 							return (
-								<tr key={ k }>
-									<td>{ v.id + 1 }</td>
-									<td>{ v.name }</td>
-									<td>{ v.members }</td>
+								<tr key={k}>
+									<td>{v.id + 1}</td>
+									<td>{v.name}</td>
+									<td>{v.members}</td>
 									<td>
-										<span
-											className={ style.lobbiesListLockIcon }
+										<Icon
+											width='20'
+											height='20'
+											type={v.private ? 'locked' : 'unlocked'}
 											style={{
-												backgroundImage: `url(${ v.private ? locked : unlocked })`
+												fill: v.private ? '#d87777' : '#77d887'
 											}}
 										/>
 									</td>
 									<td>
-										<button className={ style.lobbiesListBtn }>Присоедениться</button>
+										<button className={style.lobbiesListBtn}>Присоедениться</button>
 									</td>
 								</tr>
 							);
@@ -92,10 +90,7 @@ function Lobbies(props) {
 	);
 }
 
-Lobbies.propTypes = {
-	lobbies: PropTypes.object.isRequired,
-	fetchLobbies: PropTypes.func.isRequired
-}
+Lobbies.propTypes = lobbiesListType;
 
 const mapStateToProps = (state) => ({ lobbies: state.lobbies });
 const mapDispatchToProps = (dispatch) => ({

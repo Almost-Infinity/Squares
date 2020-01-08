@@ -1,8 +1,10 @@
-import axios from 'axios';
+import axios      from 'axios';
 
-export const REQUEST_LOBBIES = 'REQUEST_LOBBIES';
-export const RECEIVE_LOBBIES = 'RECEIVE_LOBBIES';
-export const RECEIVE_FAILED = 'RECEIVE_FAILED';
+import {
+  REQUEST_LOBBIES,
+  RECEIVE_LOBBIES,
+  RECEIVE_FAILED
+}                 from 'Types/actions';
 
 const requestLobbies = () => ({
   type: REQUEST_LOBBIES

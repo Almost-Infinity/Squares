@@ -1,7 +1,7 @@
-import React from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import React 							from 'react';
+import { Link, NavLink } 	from 'react-router-dom';
 
-import style from './styles.sass';
+import style 							from './styles.sass';
 
 export default function Header() {
 	return (

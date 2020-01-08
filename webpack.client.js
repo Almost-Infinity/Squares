@@ -29,7 +29,7 @@ module.exports = {
 
 	devServer: {
 		open: true,
-		contentBase: path.join(__dirname, 'build'),
+		contentBase: BUILD_PATH,
 		stats: 'minimal',
 		overlay: false,
 		clientLogLevel: 'none',
@@ -121,7 +121,7 @@ module.exports = {
 				}
 			}]
 		}, {
-			test: /\.(png|jpe?g|gif)$/,
+			test: /\.(png|jpe?g|svg|gif)$/,
 			use: [{
 				loader: isProduction ? 'file-loader' : 'url-loader',
 				options: {
@@ -134,17 +134,10 @@ module.exports = {
 					mozjpeg: { progressive: true, quality: 65 },
 					optipng: { enabled: false },
 					pngquant: { quality: '65-90', speed: 4 },
-					gifsicle: { interlaced: false }
+					gifsicle: { interlaced: false },
+					svgo: { enabled: false }
 				}
 			}]
-		}, {
-			test: /\.svg$/,
-			use: {
-				loader: 'url-loader',
-				options: {
-					mimetype: 'image/svg+xml'
-				}
-			}
 		}]
 	},
 
@@ -153,7 +146,9 @@ module.exports = {
 		alias: {
 			Components: path.resolve(SOURCE_PATH, 'components'),
 			Actions: path.resolve(SOURCE_PATH, 'actions'),
-			Hooks: path.resolve(SOURCE_PATH, 'hooks')
+			Hooks: path.resolve(SOURCE_PATH, 'hooks'),
+			Types: path.resolve(SOURCE_PATH, 'types'),
+			Icons: path.resolve(SOURCE_PATH, 'img')
 		}
 	},
 
