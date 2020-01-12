@@ -17,7 +17,7 @@ const BUILD_PATH = path.resolve(__dirname, 'build');
 module.exports = {
 	watch: !isProduction,
 	mode: process.env.NODE_ENV,
-	devtool: isProduction ? 'source-map' : 'inline-source-map',
+	devtool: isProduction ? false : 'inline-source-map',
 	stats: 'minimal',
 
 	entry: SOURCE_PATH + '/index.jsx',
@@ -46,11 +46,10 @@ module.exports = {
 		runtimeChunk: true,
 		minimizer: [
 			new TerserWebpackPlugin({
-				parallel: true,
-				sourceMap: isProduction,
-				extractComments: 'some',
+				sourceMap: true,
+				extractComments: false,
 				terserOptions: {
-					compress: { inline: 1 },
+					compress: { booleans_as_integers: true },
 					mangle: { safari10: true },
 					output: { safari10: true }
 				}
@@ -65,7 +64,7 @@ module.exports = {
 			exclude: /node_modules/,
 			loader: 'eslint-loader',
 			options: {
-				fix: true,
+				fix: false,
 				cache: false,
 				eslintPath: require.resolve('eslint')
 			}
@@ -82,11 +81,11 @@ module.exports = {
 		}, {
 			test: /\.(s(a|c)ss)$/,
 			use: [{
-				loader: isProduction ? MiniCssExtractPlugin.loader : 'style-loader',
+				loader: isProduction ? MiniCssExtractPlugin.loader : 'style-loader'
 			}, {
 				loader: 'css-loader',
 				options: {
-					sourceMap: isProduction,
+					sourceMap: !isProduction,
 					modules: true,
 					localIdentName: isProduction ? '[hash:base64:5]' : '[local]',
 					camelCase: true,
@@ -97,26 +96,22 @@ module.exports = {
 				options: {
 					ident: 'postcss',
 					plugins: () => [
-						require('postcss-flexbugs-fixes'),
-						require('postcss-preset-env')({
-							autoprefixer: {
-								flexbox: 'no-2009',
-							},
-							stage: 3
-						}),
-						require('css-mqpacker'),
+						require('postcss-preset-env'),
 						require('cssnano')({
-							autoprefixer: false,
-							zindex: false,
-							cssDeclarationSorter: isProduction
+							autoprefixer: isProduction,
+							discardUnused: isProduction,
+							mergeIdents: isProduction,
+							reduceIdents: isProduction,
+							svgo: false,
+							zindex: false
 						})
 					],
-					sourceMap: isProduction
+					sourceMap: !isProduction
 				}
 			}, {
 				loader: 'sass-loader',
 				options: {
-					sourceMap: isProduction,
+					sourceMap: !isProduction,
 					includePaths: [ path.join(__dirname, 'node_modules') ]
 				}
 			}]
@@ -148,7 +143,8 @@ module.exports = {
 			Actions: path.resolve(SOURCE_PATH, 'actions'),
 			Hooks: path.resolve(SOURCE_PATH, 'hooks'),
 			Types: path.resolve(SOURCE_PATH, 'types'),
-			Icons: path.resolve(SOURCE_PATH, 'img')
+			Icons: path.resolve(SOURCE_PATH, 'img'),
+			Styles: path.resolve(SOURCE_PATH, 'sass')
 		}
 	},
 
@@ -165,7 +161,7 @@ module.exports = {
 		}),
 		!isProduction && new webpack.HotModuleReplacementPlugin(),
 		new HtmlWebpackPlugin({
-			hash: true,	
+			hash: true,
 			minify: isProduction && {
 				removeComments: true,
 				collapseWhitespace: true,
