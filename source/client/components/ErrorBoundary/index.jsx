@@ -1,8 +1,6 @@
 import React from 'react';
 import { errorBoundaryType } from 'Types/props';
-import Icon from 'Components/Icon';
-
-import styles from './styles.sass';
+import ErrorMessage from 'Components/ErrorMessage';
 
 export default class ErrorBoundary extends React.Component {
   static propTypes = errorBoundaryType;
@@ -22,14 +20,11 @@ export default class ErrorBoundary extends React.Component {
   render() {
     if (this.state.hasError) {
       return (
-        <div className={styles.errorWrapper}>
-          <div className={styles.errorContainer}>
-            <Icon type='warning' width='80' height='80' className={styles.errorIcon} />
-            <h1 className={styles.errorTitle}>Что-то пошло не так! :(</h1>
-            <p className={styles.errorText}>В приложении произошла критическая ошибка!</p>
-            <button className={styles.errorButton} onClick={() => location.reload()}>Перезагрузить</button>
-          </div>
-        </div>
+        <ErrorMessage
+          errorTitle='Что-то пошло не так! :('
+          errorText='В приложении произошла критическая ошибка!'
+          reloadBtn={true}
+        />
       );
     }
 

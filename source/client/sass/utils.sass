@@ -7,6 +7,18 @@
 		display: table
 
 
+.loading-spinner
+	display: block
+	margin: 0 auto
+	fill: #444
+	animation: spinnerAnimation 2.0s infinite linear
+
+@keyframes spinnerAnimation
+  0%
+    transform: rotate(0deg)
+
+  100%
+    transform: rotate(360deg)
 
 /* UI */
 .ui-button

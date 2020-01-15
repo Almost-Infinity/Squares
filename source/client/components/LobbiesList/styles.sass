@@ -1,4 +1,5 @@
-@import '../../sass/variables.sass'
+@import '~Styles/variables.sass'
+@import '~Styles/utils.sass'
 	
 .lobbies-list__list
 	user-select: none
@@ -8,13 +9,11 @@
 
 	thead
 		tr
-			font-size: 1.2em
-			letter-spacing: 1px
-			font-variant: small-caps
-			color: #515f75
-
 			th
 				cursor: pointer
+				font-weight: 400
+				font-size: 1.2em
+				color: #515f75
 
 	tbody
 		tr
@@ -26,12 +25,11 @@
 				background-color: #f8fdff
 
 	tr
-		text-align: center
 		border: 1px solid #dde5ef
 
 		th, td
+			text-align: center
 			padding: .7em
-			vertical-align: middle
 
 			&:first-child
 				text-align: left
@@ -39,7 +37,7 @@
 			&:last-child
 				text-align: right
 
-.lobbies-list_btn
+.lobbies-list__btn
 	appearance: none
 	background-color: #f8fdff
 	border: 2px solid #d3ddea

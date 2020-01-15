@@ -1,18 +1,14 @@
-import React 												from 'react';
-import { render } 									from 'react-dom';
-import thunk 												from 'redux-thunk';
-import {
-	createStore,
-	compose,
-	applyMiddleware
-} 																	from 'redux';
-import { Provider } 								from 'react-redux';
-import { BrowserRouter as Router }	from 'react-router-dom';
-import { routes } 									from './routes';
-import reducers 										from './reducers';
-import initialState 								from './reducers/initialState';
+import React from 'react';
+import { render } from 'react-dom';
+import thunk from 'redux-thunk';
+import { createStore, compose, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { routes } from './routes';
+import reducers from './reducers';
+import initialState from './reducers/initialState';
 
-import ErrorBoundary								from 'Components/ErrorBoundary';
+import ErrorBoundary from 'Components/ErrorBoundary';
 
 import './sass/main.sass';
 

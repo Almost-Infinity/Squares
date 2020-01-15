@@ -6,8 +6,9 @@ import styles from './styles.sass';
 
 function ErrorMessage(props) {
   const { errorTitle, errorText, reloadBtn = false } = props;
+
   return (
-    <div className={styles.errorWrapper}>
+    <div className={styles.error}>
       <div className={styles.errorContainer}>
         <Icon type='warning' width='80' height='80' className={styles.errorIcon} />
         <h1 className={styles.errorTitle}>{errorTitle}</h1>
