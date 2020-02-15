@@ -4,7 +4,7 @@ import {
   REQUEST_LOBBIES,
   RECEIVE_LOBBIES,
   RECEIVE_FAILED
-} from 'Types/actions';
+} from '../actions/action-types';
 
 const requestLobbies = () => ({
   type: REQUEST_LOBBIES

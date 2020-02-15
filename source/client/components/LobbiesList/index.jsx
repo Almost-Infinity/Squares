@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 
 import { fetchLobbies } from 'Actions';
-import { lobbiesListType } from 'Types/props';
+import { object, func } from 'prop-types';
 import ErrorMessage from 'Components/ErrorMessage';
 import Icon from 'Components/Icon';
 
@@ -19,7 +19,7 @@ const headers = [
 	{ key: '', title: '', width: '20%' }
 ];
 
-function Lobbies(props) {
+function LobbiesList(props) {
 	const [ sortKey, setSortKey ] = useState('id');
 	const [ sortWay, setSortWay ] = useState(SORT_WAY_ASCENDING);
 
@@ -85,7 +85,6 @@ function Lobbies(props) {
 			</thead>
 			<tbody>
 				{
-
 					props.lobbies.list
 						.sort(sorter)
 						.map((v, k) => {
@@ -114,11 +113,14 @@ function Lobbies(props) {
 	);
 }
 
-Lobbies.propTypes = lobbiesListType;
+LobbiesList.propTypes = {
+  lobbies: object.isRequired,
+	fetchLobbies: func.isRequired
+};
 
 const mapStateToProps = (state) => ({ lobbies: state.lobbies });
 
 export default connect(
 	mapStateToProps,
 	{ fetchLobbies }
-)(Lobbies);
+)(LobbiesList);
