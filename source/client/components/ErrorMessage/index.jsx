@@ -1,11 +1,11 @@
 import React from 'react';
 import Icon from 'Components/Icon';
-import { errorMessageType } from 'Types/props';
+import { string, bool } from 'prop-types';
 
 import styles from './styles.sass';
 
 function ErrorMessage(props) {
-  const { errorTitle, errorText, reloadBtn = false } = props;
+  const { errorTitle, errorText, reloadBtn } = props;
 
   return (
     <div className={styles.error}>
@@ -21,5 +21,14 @@ function ErrorMessage(props) {
   );
 }
 
-ErrorMessage.propTypes = errorMessageType;
+ErrorMessage.propTypes = {
+  errorTitle: string.isRequired,
+  errorText: string.isRequired,
+  reloadBtn: bool
+};
+
+ErrorMessage.defaultProps = {
+  reloadBtn: false
+};
+
 export default ErrorMessage;

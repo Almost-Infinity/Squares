@@ -1,5 +1,5 @@
 import React from 'react';
-import { iconType } from 'Types/props';
+import { string, object } from 'prop-types';
 
 import iconSprite from 'Icons/icon-sprite.svg';
 
@@ -11,6 +11,12 @@ const Icon = ({ width, height, type, className, style }, props) => {
   );
 };
 
-Icon.propTypes = iconType;
+Icon.propTypes = {
+  width: string,
+  height: string,
+  type: string.isRequired,
+  className: string,
+  style: object
+};
 
 export default Icon;

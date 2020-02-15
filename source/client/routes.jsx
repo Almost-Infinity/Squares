@@ -1,25 +1,24 @@
 import React from 'react';
-import { Switch } from 'react-router-dom';
-import RouteEx from 'Components/RouteEx';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import Header from 'Components/Header';
-import Lobbies from 'Components/LobbiesList';
-import Field from 'Components/Field';
+import LobbiesList from 'Components/LobbiesList';
+import Game from 'Components/Game';
 
-const WrappedRoute = ({ ...rest }) => (
-  <main>
-    <RouteEx {...rest} />
-  </main>
+const Routes = () => (
+	<BrowserRouter>
+		<Switch>
+			<Route path='/play' component={Game}/>
+			<Route path='/'>
+				<Header />
+				<main>
+					<Route path='/' component={LobbiesList} exact/>
+					<Route path='/top'/>
+					<Route path='/faq'/>
+					<Route path='/auth'/>
+				</main>
+			</Route>
+		</Switch>
+	</BrowserRouter>
 );
 
-export const routes = (
-  <React.Fragment>
-    <Header />
-    <Switch>
-      <WrappedRoute path='/' title='Список лобби' component={Lobbies} exact />
-      <WrappedRoute path='/top' title='Лучшие игроки' />
-      <WrappedRoute path='/blog' title='Блог' />
-      <WrappedRoute path='/auth' title='Авторизация' />
-      <RouteEx path='/play' title='<Название лобби>' component={Field} />
-    </Switch>
-  </React.Fragment>
-);
+export default Routes;

@@ -1,9 +1,11 @@
 import React from 'react';
-import { errorBoundaryType } from 'Types/props';
+import { node } from 'prop-types';
 import ErrorMessage from 'Components/ErrorMessage';
 
 export default class ErrorBoundary extends React.Component {
-  static propTypes = errorBoundaryType;
+  static propTypes = {
+    children: node.isRequired
+  };
 
   constructor(props) {
     super(props);
