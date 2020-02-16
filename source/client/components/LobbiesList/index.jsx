@@ -107,7 +107,7 @@ function LobbiesList(props) {
 								</tr>
 							);
 						})
-				}
+					}
 			</tbody>
 		</table>
 	);

@@ -1,5 +1,5 @@
-@import '../../sass/variables.sass'
-@import '../../sass/utils.sass'
+@import '~Styles/variables.sass'
+@import '~Styles/utils.sass'
 
 
 .header
@@ -15,19 +15,17 @@
 	display: flex
 	overflow: hidden
 
-.header__logo
-	float: left
-	width: 70px
+.header__logo-inner
+	width: 100%
+	fill: $color-white
 	background: #e63462
 	background: linear-gradient(#fe5f55, #e63462)
 
-.header__logo-inner
-	display: block
-	height: $ui-header-height
-	background-size: contain
-	background-repeat: no-repeat
-	background-image: url(../../img/squares-logo-small.png)
-	background-position: center
+.header__logo
+	display: inline-block
+	float: left
+	width: 70px
+	height: 45px
 
 .header__inner-left
 	color: 0

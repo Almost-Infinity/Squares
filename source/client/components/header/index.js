@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 
+import Icon from 'Components/Icon';
 import style from './styles.sass';
 
 export default function Header() {
@@ -8,9 +9,9 @@ export default function Header() {
 		<header className={style.header}>
 			<div className={style.headerInner}>
 				<div className={style.headerInnerLeft}>
-					<div className={style.headerLogo} aria-label='логотип'>
-						<Link to='/' className={style.headerLogoInner}></Link>
-					</div>
+					<Link to='/' className={style.headerLogo}>
+						<Icon type='logo' width='45' height='45' className={style.headerLogoInner} />
+					</Link>
 					<nav className={style.navbar}>
 						<ul className={style.navbarItemsWrapper}>
 							<li className={style.navbarItem}>

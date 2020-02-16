@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-export function useWindowSize() {
+export function useWindowSize(cb) {
   const isClient = typeof window === 'object';
 
   function getSize() {
@@ -17,9 +17,10 @@ export function useWindowSize() {
     if (!isClient) {
       return false;
     }
-    
-    function handleResize() {
+
+    function handleResize(e) {
       setWindowSize(getSize());
+      cb && cb(e);
     }
 
     window.addEventListener('resize', handleResize);
