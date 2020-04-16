@@ -1,10 +1,8 @@
-import axios from 'axios';
-
 import {
   REQUEST_LOBBIES,
   RECEIVE_LOBBIES,
   RECEIVE_FAILED
-} from '../actions/action-types';
+} from 'Actions/action-types';
 
 const requestLobbies = () => ({
   type: REQUEST_LOBBIES
@@ -21,12 +19,18 @@ const receiveFailed = (err) => ({
 });
 
 export const fetchLobbies = () => {
-  return (dispatch) => {
+  return async (dispatch) => {
     dispatch(requestLobbies());
 
-    return axios.get('https://api.myjson.com/bins/13uhbm')
-      .then((res) => dispatch(receiveLobbies(res.data.lobbies)))
-      .catch((err) => dispatch(receiveFailed(err)));
+    let res = await fetch('https://gist.githubusercontent.com/Almost-Infinity/f82a2624cccd83aa2de3a0c5dd031b0c/raw/7a88a426466d335bf2c6b3692ed91501344bd17a/lobbies-list.json');
+    if (!res.ok) {
+      dispatch(receiveFailed(res));
+      console.error('Couldn\'t get lobbies from API', res);
+      return;
+    }
+
+    let json = await res.json();
+    dispatch(receiveLobbies(json.lobbies));
   };
 };
 

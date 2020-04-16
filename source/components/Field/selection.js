@@ -11,16 +11,16 @@ class Selection {
 
   start(e, offsetX, offsetY) {
     this.isExist = true;
-    this.posX = ~~((offsetX + e.clientX) / CELL_SIZE_PX);
-    this.posY = ~~((offsetY + e.clientY) / CELL_SIZE_PX);
+    this.posX = ~~((e.clientX - offsetX) / CELL_SIZE_PX);
+    this.posY = ~~((e.clientY - offsetY) / CELL_SIZE_PX);
     this.height = 1;
     this.width = 1;
   }
 
   process(e, offsetX, offsetY) {
     if (this.isExist) {
-      const currentX = ~~((offsetX + e.clientX) / CELL_SIZE_PX);
-      const currentY = ~~((offsetY + e.clientY) / CELL_SIZE_PX);
+      const currentX = ~~((e.clientX - offsetX) / CELL_SIZE_PX);
+      const currentY = ~~((e.clientY - offsetY) / CELL_SIZE_PX);
 
       const deltaX = currentX - this.posX;
       const deltaY = currentY - this.posY;
@@ -50,8 +50,8 @@ class Selection {
     if (this.isExist) {
       ctx.save();
       ctx.strokeRect(
-        offsetX + (this.width < 0 ? this.posX + 1 : this.posX) * CELL_SIZE_PX,
-        offsetY + (this.height < 0 ? this.posY + 1 : this.posY) * CELL_SIZE_PX,
+        (Math.ceil(offsetX / CELL_SIZE_PX) + (this.width < 0 ? this.posX + 1 : this.posX)) * CELL_SIZE_PX,
+        (Math.ceil(offsetY / CELL_SIZE_PX) + (this.height < 0 ? this.posY + 1 : this.posY)) * CELL_SIZE_PX,
         this.width * CELL_SIZE_PX,
         this.height * CELL_SIZE_PX
       );

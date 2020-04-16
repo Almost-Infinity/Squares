@@ -1,13 +1,13 @@
 import React from 'react';
 import { render } from 'react-dom';
-import thunk from 'redux-thunk';
-import { createStore, compose, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
-import Routes from './routes';
-import reducers from './reducers';
-import initialState from './reducers/initialState';
-import ErrorBoundary from 'Components/ErrorBoundary';
+import { createStore, compose, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
 
+import reducers from './reducers';
+import initialState from './reducers/initial-state';
+import ErrorBoundary from 'Components/ErrorBoundary';
+import Routes from './routes';
 import 'Styles/main.sass';
 
 const store = createStore(

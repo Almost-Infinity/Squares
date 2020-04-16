@@ -1,9 +1,13 @@
 @import './variables.sass'
-@import './normalize.sass'
 @import './utils.sass'
 
-*
+*,
+::before,
+::after
+	margin: 0
+	padding: 0
 	outline: none
+	box-sizing: border-box
 
 html,
 body
@@ -11,16 +15,13 @@ body
 	direction: ltr
 	background-color: $color-bg
 	font: normal normal 400 14px/1.5 Roboto, sans-serif
-	-webkit-font-smoothing: antialiased
-	-moz-osx-font-smoothing: grayscale
 
 \:global(#squares)
-		overflow: hidden
-		height: inherit
+	overflow: hidden
+	height: inherit
 
-main:not([class~=game])
+main
 	@extend .clearfix
-	box-sizing: border-box
 	width: $ui-page-width
 	height: calc(100% - #{$ui-header-height} - 2em) // 2em - sum of top and bottom layout margin
 	margin: 1em auto

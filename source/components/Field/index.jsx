@@ -1,13 +1,41 @@
 import React, { useRef, useEffect } from 'react';
-import { number } from 'prop-types';
 
-import Selection from './selection';
-import { onMove } from './mouse';
+import Render from 'Render/core';
+// import Selection from './selection';
+// import { onMove } from './mouse';
 import { generateLayerGrid } from './drawing';
 import styles from './styles.sass';
 
-function Field({ width, height }) {
+function Field() {
+  let render = null;
   const canvasRef = useRef(null);
+  const layerGrid = generateLayerGrid();
+
+  const draw = (ctx) => {
+    const { width: cW, height: cH } = ctx.canvas;
+    ctx.clearRect(0, 0, cW, cH);
+
+    // Grid layer
+    if (layerGrid) {
+      ctx.drawImage(layerGrid, 0, 0, cW, cH, 0, 0, cW, cH);
+    }
+  };
+
+  useEffect(() => {
+    render = new Render(canvasRef.current, draw);
+
+    return () => render && render.stop();
+  }, []);
+
+  return (
+    <canvas ref={canvasRef} className={styles.field}></canvas>
+  );
+}
+
+export default Field;
+
+/**
+ *
   const layerGrid = generateLayerGrid();
   let contentOffsetX = 0;
   let contentOffsetY = 0;
@@ -58,24 +86,4 @@ function Field({ width, height }) {
 
   // Did mount and did update
   useEffect(() => update());
-
-  // Render
-  return (
-    <canvas
-      ref={canvasRef}
-      className={styles.field}
-      width={width}
-      height={height}
-      onMouseMove={onMouseMove}
-      onMouseDown={onMouseDown}
-      onMouseUp={onMouseUp}
-    ></canvas>
-  );
-}
-
-Field.propTypes = {
-  width: number.isRequired,
-  height: number.isRequired
-};
-
-export default Field;
+ */

@@ -9,3 +9,5 @@ export function onMove(e, offsetX, offsetY) {
     (newOffsetY >= 0 && newOffsetY <= (LAYER_HEIGHT - e.target.height)) ? newOffsetY : offsetY
   ];
 }
+
+

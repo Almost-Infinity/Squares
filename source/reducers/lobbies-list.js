@@ -2,8 +2,8 @@ import {
   REQUEST_LOBBIES,
   RECEIVE_LOBBIES,
   RECEIVE_FAILED
-} from '../actions/action-types';
-import initialState from './initialState';
+} from 'Actions/action-types';
+import initialState from './initial-state';
 
 export default (state = initialState, action) => {
   switch (action.type) {

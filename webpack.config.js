@@ -1,17 +1,15 @@
 const path = require('path');
-const chalk = require('chalk');
 const webpack = require('webpack');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const ProgressBarPlugin = require('progress-bar-webpack-plugin');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
 
 const isProduction = (process.env.NODE_ENV === 'production');
 
-const SOURCE_PATH = path.resolve(__dirname, 'source', 'client');
+const SOURCE_PATH = path.resolve(__dirname, 'source');
 const BUILD_PATH = path.resolve(__dirname, 'build');
 
 module.exports = {
@@ -23,6 +21,7 @@ module.exports = {
 	entry: SOURCE_PATH + '/index.jsx',
 	output: {
 		path: BUILD_PATH,
+		publicPath: isProduction ? './' : '',
 		filename: isProduction ? 'static/scripts/squares.[hash:8].js' : 'static/scripts/squares.js',
 		chunkFilename: isProduction ? 'static/scripts/[name].[chunkhash:8].js' : 'static/scripts/[name].chunk.js'
 	},
@@ -106,6 +105,7 @@ module.exports = {
 							ident: 'postcss',
 							plugins: () => [
 								require('postcss-preset-env'),
+								require('postcss-flexbugs-fixes'),
 								require('cssnano')({
 									autoprefixer: isProduction,
 									discardUnused: isProduction,
@@ -144,26 +144,21 @@ module.exports = {
 	},
 
 	resolve: {
-		extensions: [ '.wasm', '.mjs', '.js', '.jsx', '.json' ],
+		extensions: [ '.js', '.jsx' ],
 		alias: {
 			Components: path.resolve(SOURCE_PATH, 'components'),
 			Actions: path.resolve(SOURCE_PATH, 'actions'),
 			Hooks: path.resolve(SOURCE_PATH, 'hooks'),
-			Icons: path.resolve(SOURCE_PATH, 'img'),
+			Icons: path.resolve(SOURCE_PATH, 'images'),
 			Styles: path.resolve(SOURCE_PATH, 'sass'),
-			Utilities: path.resolve(SOURCE_PATH, 'utilities')
+			Utilities: path.resolve(SOURCE_PATH, 'utilities'),
+			Render: path.resolve(SOURCE_PATH, 'render')
 		}
 	},
 
 	plugins: [
-		new ProgressBarPlugin({
-			format: `\t${chalk.green.italic(':msg')} [${chalk.green.bold(':bar')}] ${chalk.gray(':percent')}`,
-			renderThrottle: 100,
-			summary: false,
-			clear: true
-		}),
 		isProduction && new CleanWebpackPlugin({
-			cleanOnceBeforeBuildPatterns: [ '*', '!config', '!app.js' ],
+			cleanOnceBeforeBuildPatterns: [ '*' ],
 			verbose: false
 		}),
 		!isProduction && new webpack.HotModuleReplacementPlugin(),
@@ -182,8 +177,8 @@ module.exports = {
 				minifyURLs: true
 			},
 			filename: './index.html',
-			template: SOURCE_PATH + '/views/index_template.html',
-			favicon: SOURCE_PATH + '/img/favicon.ico'
+			template: SOURCE_PATH + '/views/index.template.html',
+			favicon: SOURCE_PATH + '/images/favicon.ico'
 		}),
 		isProduction && new MiniCssExtractPlugin({
 			filename: 'static/styles/squares.[contenthash:8].css',
