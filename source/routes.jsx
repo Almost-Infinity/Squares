@@ -3,7 +3,7 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 import Header from 'Components/Header';
 import LobbiesList from 'Components/LobbiesList';
-import Field from 'Components/Field';
+import { Field } from 'Components/Field';
 
 const Routes = () => (
 	<BrowserRouter>
