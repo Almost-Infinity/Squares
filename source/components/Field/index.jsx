@@ -15,7 +15,7 @@ function Field() {
     return () => _canvasRender && _canvasRender.destroy();
   }, []);
 
-  useWindowResize(() => _canvasRender.updateSize());
+  useWindowResize(() => _canvasRender.onWindowResize());
 
   return (
     <canvas
