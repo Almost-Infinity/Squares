@@ -1,6 +1,8 @@
 import { Canvas } from './core';
 
+import './utilities';
 import './draw';
-import './mouse';
+import './events/mouse';
+import './events/resize';
 
 export { Canvas };
