@@ -1,5 +1,5 @@
 import { Canvas } from './core';
-import { brightness } from 'Utilities';
+import { brightness, createDummyCanvas } from 'Utilities';
 import {
   CELL_SIZE_PX,
   CELL_COUNT_X,
@@ -12,24 +12,30 @@ Canvas.prototype._draw = function() {
   const { _offscreenViewContext: ctx } = this;
   ctx.clearRect(0, 0, OFFSCREEN_WIDTH, OFFSCREEN_HEIGHT);
 
-  // Draw background grid
-  ctx.save();
-  ctx.lineWidth = 1;
-  ctx.strokeStyle = 'rgba(51, 55, 69, .2)';
-  ctx.beginPath();
+  // Caching background grid
+  if (this._layerGridContext === null) {
+    this._layerGridContext = createDummyCanvas(OFFSCREEN_WIDTH, OFFSCREEN_HEIGHT).getContext('2d');
+    const gridCtx = this._layerGridContext;
 
-  for (let i = 1; i < CELL_COUNT_Y; i++) { // Horizontal lines
-    ctx.moveTo(0, CELL_SIZE_PX * i);
-    ctx.lineTo(OFFSCREEN_WIDTH, CELL_SIZE_PX * i);
+    gridCtx.save();
+    gridCtx.lineWidth = 1;
+    gridCtx.strokeStyle = 'rgba(51, 55, 69, .2)';
+    gridCtx.beginPath();
+
+    for (let i = 1; i < CELL_COUNT_Y; i++) { // Horizontal lines
+      gridCtx.moveTo(0, CELL_SIZE_PX * i);
+      gridCtx.lineTo(OFFSCREEN_WIDTH, CELL_SIZE_PX * i);
+    }
+
+    for (let i = 1; i < CELL_COUNT_X; i++) { // Vertical lines
+      gridCtx.moveTo(CELL_SIZE_PX * i, 0);
+      gridCtx.lineTo(CELL_SIZE_PX * i, OFFSCREEN_HEIGHT);
+    }
+
+    gridCtx.stroke();
+    gridCtx.restore();
   }
-
-  for (let i = 1; i < CELL_COUNT_X; i++) { // Vertical lines
-    ctx.moveTo(CELL_SIZE_PX * i, 0);
-    ctx.lineTo(CELL_SIZE_PX * i, OFFSCREEN_HEIGHT);
-  }
-
-  ctx.stroke();
-  ctx.restore();
+  ctx.drawImage(this._layerGridContext.canvas, 0, 0);
 
   // Draw squares
   if (this._renderData.length > 0) {

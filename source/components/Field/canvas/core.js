@@ -14,6 +14,7 @@ class Canvas {
   _mouseKeyMap = [];
 
   _offscreenViewContext = null;
+  _layerGridContext = null;
 
   _viewOffsetX = 0;
   _viewOffsetY = 0;
