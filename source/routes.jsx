@@ -3,12 +3,12 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 import Header from 'Components/Header';
 import LobbiesList from 'Components/LobbiesList';
-import { Field } from 'Components/Field';
+import { Game } from 'Components/Game';
 
 const Routes = () => (
 	<BrowserRouter>
 		<Switch>
-			<Route path='/play' component={Field}/>
+			<Route path='/play' component={Game}/>
 			<Route path='/'>
 				<Header />
 				<main>

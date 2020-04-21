@@ -4,7 +4,7 @@ export default {
     isFetching: false,
     list: []
   },
-  squaresPool: {
-    pool: []
+  game: {
+    squaresPool: []
   }
 };

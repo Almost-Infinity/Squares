@@ -19,6 +19,8 @@ class Canvas {
   _viewOffsetY = 0;
   _viewScale = 1;
 
+  _renderData = [];
+
   constructor($el) {
     this._$canvas = $el;
   }
@@ -38,6 +40,13 @@ class Canvas {
       cancelAnimationFrame(this._requestFrameId);
     }
   }
+
+  updateRenderData = (data) => {
+    if (JSON.stringify(data) !== JSON.stringify(this._renderData)) {
+      this._renderData = data;
+      this._isNeedRedraw = true;
+    }
+  };
 
   _renderer = () => {
     const FPS = 60;

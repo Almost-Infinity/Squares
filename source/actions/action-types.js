@@ -1,3 +1,7 @@
+// Lobbies
 export const REQUEST_LOBBIES = 'REQUEST_LOBBIES';
 export const RECEIVE_LOBBIES = 'RECEIVE_LOBBIES';
 export const RECEIVE_FAILED = 'RECEIVE_FAILED';
+
+// Game
+export const SQUARES_POOL_ADD = 'SQUARES_POOL_ADD';
