@@ -3,7 +3,7 @@ import { Canvas } from './core';
 Canvas.prototype._selectionBegin = function(e) {
   if (this._selection === null) {
     const [ cursorX, cursorY ] = this._cursorToOffscreen(e.clientX, e.clientY, true);
-    this._selection = this._createSquare(cursorX, cursorY, 1, 1, 'orange'); // TODO: Change color
+    this._selection = this._createSelection(cursorX, cursorY, 1, 1, 'orange'); // TODO: Change color
   }
 };
 

@@ -9,7 +9,7 @@ import {
 	FIELD_BORDER
 } from './constants';
 
-Canvas.prototype._createSquare = (x, y, w, h) => ({
+Canvas.prototype._createSelection = (x, y, w, h) => ({
 	posX: x,
 	posY: y,
 	width: w,
