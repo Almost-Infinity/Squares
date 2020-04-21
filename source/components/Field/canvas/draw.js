@@ -68,7 +68,7 @@ Canvas.prototype._draw = function() {
   // Draw selection
   if (this._selection !== null) {
     ctx.save();
-    ctx.strokeStyle = '#1a757d';
+    ctx.strokeStyle = this._selection._isIntersected ? '#7d1a1a' : '#1a757d';
     ctx.strokeRect(
       this._selection.posX * CELL_SIZE_PX,
       this._selection.posY * CELL_SIZE_PX,

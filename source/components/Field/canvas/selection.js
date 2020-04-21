@@ -1,5 +1,23 @@
 import { Canvas } from './core';
 
+Canvas.prototype.isIntersected = function(another) {
+	return !(
+    this._selection.posX > another.posX + another.width - 1 || // Right side
+    this._selection.posX + this._selection.width - 1 < another.posX || // Left side
+    this._selection.posY > another.posY + another.height - 1 || // Top side
+    this._selection.posY + this._selection.height - 1 < another.posY // Bottom side
+  );
+};
+
+Canvas.prototype.isTouched = function(another) {
+  return !(
+    this._selection.posX > another.posX + another.width || // Right side
+    this._selection.posX + this._selection.width < another.posX || // Left side
+    this._selection.posY > another.posY + another.height || // Top side
+    this._selection.posY + this._selection.height < another.posY // Bottom side
+  );
+};
+
 Canvas.prototype._selectionBegin = function(e) {
   if (this._selection === null) {
     const [ cursorX, cursorY ] = this._cursorToOffscreen(e.clientX, e.clientY, true);
@@ -20,12 +38,21 @@ Canvas.prototype._selectionProcess = function(e) {
     this._selection.posY = minY;
     this._selection.width = maxX - minX + 1;
     this._selection.height = maxY - minY + 1;
+
+    for (let it of this._renderData) {
+      if((this._selection._isIntersected = this.isIntersected(it))) {
+        break;
+      }
+      else if((this._selection._isTouched = this.isTouched(it))) {
+        break;
+      }
+    }
   }
 };
 
 Canvas.prototype._selectionEnd = function() {
   if (this._selection !== null) {
-    if (this._selectionObserver !== null) {
+    if (this._selectionObserver !== null && !this._selection._isIntersected) {
       this._selectionObserver({
         posX: this._selection.posX,
         posY: this._selection.posY,

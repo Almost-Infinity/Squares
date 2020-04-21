@@ -15,7 +15,9 @@ Canvas.prototype._createSelection = (x, y, w, h) => ({
 	width: w,
 	height: h,
 	_beginX: x,
-	_beginY: y
+	_beginY: y,
+	_isIntersected: false,
+	_isTouched: false
 });
 
 Canvas.prototype._cursorToOffscreen = function(cursorX, cursorY, toCells = false) {
