@@ -44,3 +44,19 @@ export function createDummyCanvas(width, height) {
   canvas.height = height;
   return canvas;
 }
+
+/**
+ * Change color brightness
+ *
+ * @param {number} hex Hex color
+ * @param {number} factor Float factor. > 0 - darker, < 0 - lighter
+ */
+export function brightness(hex, factor) {
+  hex = parseInt(hex, 16);
+
+  const r = ((hex >> 16) & 255) * factor;
+  const g = ((hex >> 8) & 255) * factor;
+  const b = (hex & 255) * factor;
+
+  return (b | (g << 8) | (r << 16)).toString(16);
+}
