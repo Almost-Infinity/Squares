@@ -5,7 +5,7 @@ import {
 } from 'Actions/action-types';
 import initialState from './initial-state';
 
-export default (state = initialState, action) => {
+export const lobbiesReducer = (state = initialState, action) => {
   switch (action.type) {
     case REQUEST_LOBBIES: {
       return Object.assign({}, state, {
