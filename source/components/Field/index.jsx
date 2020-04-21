@@ -11,7 +11,12 @@ let _canvasRender = null;
 // eslint-disable-next-line no-unused-vars
 function Field({ squaresPool, squaresPoolAdd }) {
   useEffect(() => {
-    _canvasRender = new Canvas(_$canvas);
+    const onSelectionEnd = (sel) => {
+      sel.color = '6397c7'; // In the future, the color will be taken from the database
+      squaresPoolAdd(sel);
+    };
+
+    _canvasRender = new Canvas(_$canvas, onSelectionEnd);
     _canvasRender.init();
 
     return () => _canvasRender && _canvasRender.destroy();
@@ -24,6 +29,7 @@ function Field({ squaresPool, squaresPoolAdd }) {
     <canvas
       ref={(el) => _$canvas = el}
       className={styles.field}
+      onContextMenu={(e) => e.preventDefault()}
       onWheel={(e) => _canvasRender && _canvasRender.onMouseWheel(e)}
       onMouseUp={(e) => _canvasRender && _canvasRender.onMouseUp(e)}
       onMouseOut={(e) => _canvasRender && _canvasRender.onMouseOut(e)}

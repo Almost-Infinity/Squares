@@ -1,4 +1,5 @@
 import { Canvas } from './core';
+import { brightness } from 'Utilities';
 import {
   CELL_SIZE_PX,
   CELL_COUNT_X,
@@ -34,14 +35,14 @@ Canvas.prototype._draw = function() {
   if (this._renderData.length > 0) {
     ctx.save();
     ctx.lineWidth = 1;
-    ctx.strokeStyle = 'rgba(51, 55, 69, .5)';
-    ctx.font = 'bold 16px Roboto';
+    ctx.font = '300 16px Roboto';
     ctx.textBaseline = 'middle';
     ctx.textAlign = 'center';
 
     for (let it of this._renderData) {
       ctx.save();
-      ctx.fillStyle = it.color;
+      ctx.fillStyle = `#${it.color}`;
+      ctx.strokeStyle = `#${brightness(it.color, 0.5)}`;
 
       ctx.beginPath();
       ctx.rect(
@@ -50,10 +51,10 @@ Canvas.prototype._draw = function() {
         it.width * CELL_SIZE_PX,
         it.height * CELL_SIZE_PX
       );
-      ctx.stroke();
       ctx.fill();
+      ctx.stroke();
 
-      ctx.fillStyle = '#444';
+      ctx.fillStyle = `#${brightness(it.color, 0.3)}`;
       ctx.fillText(
         `${it.width * it.height}`,
         (it.posX + (it.width / 2)) * CELL_SIZE_PX,
@@ -65,6 +66,17 @@ Canvas.prototype._draw = function() {
   }
 
   // Draw selection
+  if (this._selection !== null) {
+    ctx.save();
+    ctx.strokeStyle = '#1a757d';
+    ctx.strokeRect(
+      this._selection.posX * CELL_SIZE_PX,
+      this._selection.posY * CELL_SIZE_PX,
+      this._selection.width * CELL_SIZE_PX,
+      this._selection.height * CELL_SIZE_PX
+    );
+    ctx.restore();
+  }
 };
 
 export { Canvas };

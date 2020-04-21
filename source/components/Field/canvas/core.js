@@ -20,9 +20,12 @@ class Canvas {
   _viewScale = 1;
 
   _renderData = [];
+  _selection = null;
+  _selectionObserver = null;
 
-  constructor($el) {
+  constructor($el, selectionCallback) {
     this._$canvas = $el;
+    this._selectionObserver = selectionCallback;
   }
 
   init = () => {
@@ -71,6 +74,8 @@ class Canvas {
           this._$canvas.width,
           this._$canvas.height
         );
+
+        // TODO: Move selection rendering here, and buffer offscreen render
 
         this._isNeedRedraw = false;
       }

@@ -8,22 +8,39 @@ import {
 
 Canvas.prototype.onMouseDown = function(e) {
 	this._mouseKeyMap[e.button] = true;
+
+	if (this._mouseKeyMap[MOUSE_KEY.LMB]) {
+		this._selectionBegin(e);
+		this._isNeedRedraw = true;
+	}
 };
 
 Canvas.prototype.onMouseUp = function(e) {
+	if (this._mouseKeyMap[MOUSE_KEY.LMB]) {
+		this._selectionEnd();
+		this._isNeedRedraw = true;
+	}
+
 	this._mouseKeyMap[e.button] = false;
 	this._$canvas.style.cursor = CURSOR.DEFAULT;
 };
 
 Canvas.prototype.onMouseMove = function(e) {
-	if (this._mouseKeyMap[MOUSE_KEY.LMB]) {
+	// Moving
+	if (this._mouseKeyMap[MOUSE_KEY.RMB]) {
 		this._$canvas.style.cursor = CURSOR.MOVING;
 
 		this._newViewPosition(
-			this._viewOffsetX - e.nativeEvent.movementX,
-			this._viewOffsetY - e.nativeEvent.movementY
+			this._viewOffsetX - e.nativeEvent.movementX * this._viewScale,
+			this._viewOffsetY - e.nativeEvent.movementY * this._viewScale
 		);
 
+		this._isNeedRedraw = true;
+	}
+
+	// Selection
+	else if (this._mouseKeyMap[MOUSE_KEY.LMB]) {
+		this._selectionProcess(e);
 		this._isNeedRedraw = true;
 	}
 };
@@ -50,8 +67,10 @@ Canvas.prototype.onMouseWheel = function(e) {
 };
 
 Canvas.prototype.onMouseOut = function() {
+	this._selection = null;
 	this._mouseKeyMap = [];
 	this._$canvas.style.cursor = CURSOR.DEFAULT;
+	this._isNeedRedraw = true;
 };
 
 export { Canvas };
