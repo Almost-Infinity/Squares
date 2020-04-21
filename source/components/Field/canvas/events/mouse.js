@@ -32,7 +32,11 @@ Canvas.prototype.onMouseWheel = function(e) {
 	const scaleDir = e.deltaY < 0 ? -1 : 1;
 	const scaleNext = this._viewScale + (SCALE.STEP * scaleDir);
 
+<<<<<<< HEAD
 	if (scaleNext >= SCALE.MIN && scaleNext <= this._getMaxScale()) {
+=======
+	if (scaleNext >= SCALE.MIN && scaleNext <= SCALE.MAX) {
+>>>>>>> f520463d0ad9bef41af0329b8fa100f5789b8418
 		this._viewScale = scaleNext;
 
 		// Scaling to the cursor

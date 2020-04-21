@@ -1,6 +1,7 @@
 import { Canvas } from './core';
 import {
 	OFFSCREEN_WIDTH,
+<<<<<<< HEAD
 	OFFSCREEN_HEIGHT,
 	SCALE
 } from './constants';
@@ -11,6 +12,11 @@ Canvas.prototype._getMaxScale = function() {
 		Math.min(OFFSCREEN_HEIGHT / this._$canvas.height, SCALE.MAX);
 };
 
+=======
+	OFFSCREEN_HEIGHT
+} from './constants';
+
+>>>>>>> f520463d0ad9bef41af0329b8fa100f5789b8418
 Canvas.prototype._newViewPosition = function(newOffsetX, newOffsetY) {
 	if (newOffsetX >= 0) {
 		const maxViewOffsetX = OFFSCREEN_WIDTH - Math.ceil(this._$canvas.width * this._viewScale);
