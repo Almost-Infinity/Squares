@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
-import { array, func } from 'prop-types';
+import { array, func, bool } from 'prop-types';
 
 import { useWindowResize } from 'Hooks';
+import { cn } from 'Utilities';
 import { Canvas } from './canvas';
 import styles from './styles.sass';
 
@@ -9,7 +10,7 @@ let _$canvas = null;
 let _canvasRender = null;
 
 // eslint-disable-next-line no-unused-vars
-function Field({ squaresPool, squaresPoolAdd }) {
+function Field({ squaresPool, squaresPoolAdd, blured }) {
   useEffect(() => {
     const onSelectionEnd = (sel) => {
       sel.color = '6397c7'; // In the future, the color will be taken from the database
@@ -28,7 +29,7 @@ function Field({ squaresPool, squaresPoolAdd }) {
   return (
     <canvas
       ref={(el) => _$canvas = el}
-      className={styles.field}
+      className={blured ? cn(styles.field, styles.fieldBlured) : styles.field}
       onContextMenu={(e) => e.preventDefault()}
       onWheel={(e) => _canvasRender && _canvasRender.onMouseWheel(e)}
       onMouseUp={(e) => _canvasRender && _canvasRender.onMouseUp(e)}
@@ -41,7 +42,8 @@ function Field({ squaresPool, squaresPoolAdd }) {
 
 Field.propTypes = {
   squaresPool: array,
-  squaresPoolAdd: func
+  squaresPoolAdd: func,
+  blured: bool
 };
 
 export { Field };

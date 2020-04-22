@@ -6,3 +6,14 @@
   background-color: $color-white
   user-select: none
   border: 2px solid rgba(51, 55, 69, .5)
+
+.field--blured
+  animation: .15s ease-in forwards tablistShow
+
+
+@keyframes tablistShow
+  0%
+    filter: blur(0px)
+
+  100%
+    filter: blur(5px)

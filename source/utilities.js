@@ -50,6 +50,7 @@ export function createDummyCanvas(width, height) {
  *
  * @param {number} hex Hex color
  * @param {number} factor Float factor. > 0 - darker, < 0 - lighter
+ * @returns {string} Modified hex color
  */
 export function brightness(hex, factor) {
   hex = parseInt(hex, 16);
@@ -59,4 +60,14 @@ export function brightness(hex, factor) {
   const b = (hex & 255) * factor;
 
   return (b | (g << 8) | (r << 16)).toString(16);
+}
+
+/**
+ * Combine classes into a single string
+ *
+ * @param  {...any} cns Classlist
+ * @returns {string} Class list
+ */
+export function cn(...cns) {
+  return cns.reduce((acc, curr) => `${acc} ${curr}`);
 }

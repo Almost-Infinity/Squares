@@ -1,14 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { object, func } from 'prop-types';
 
+import { useKeyboard } from 'Hooks';
 import { squaresPoolAdd } from 'Actions';
 import { Field } from 'Components/Field';
+import { TabList } from 'Components/TabList';
 
 function Game({ game, squaresPoolAdd }) {
+  const [ isTablistShown, toggleTablist ] = useState(false);
+
+  useKeyboard((kbMap) => {
+    toggleTablist(kbMap.Tab);
+  });
+
   return (
     <React.Fragment>
-      <Field squaresPool={game.squaresPool} squaresPoolAdd={squaresPoolAdd}/>
+      <Field blured={isTablistShown} squaresPool={game.squaresPool} squaresPoolAdd={squaresPoolAdd}/>
+      {isTablistShown && <TabList />}
     </React.Fragment>
   );
 }

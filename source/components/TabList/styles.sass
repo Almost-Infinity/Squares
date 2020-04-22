@@ -1,0 +1,79 @@
+@import '~Styles/variables.sass'
+@import '~Styles/mixins.sass'
+  
+.tablist__background
+  position: fixed
+  top: 0
+  right: 0
+  bottom: 0
+  left: 0
+
+.tablist__player-info
+  position: absolute
+  background-color: $color-white
+  padding: 10px
+  border-radius: 5px
+  box-shadow: $ui-shadow-light
+  transform-origin: center
+  animation: .2s ease-in forwards playerInfoShow
+  
+  &:nth-child(1)
+    @include pos--top-left($playerInfoMargin)
+
+  &:nth-child(2)
+    @include pos--top-right($playerInfoMargin)
+    .tablist__player-avatar,
+    .tablist__player-score
+      float: right
+
+  &:nth-child(3)
+    @include pos--bottom-right($playerInfoMargin)
+    .tablist__player-avatar,
+    .tablist__player-score
+      float: right
+
+  &:nth-child(4)
+    @include pos--bottom-left($playerInfoMargin)
+
+
+.tablist__player-avatar
+  display: block
+  width: 100px
+  height: 100px
+  border: 1px solid
+  float: left
+
+.tablist__player-score
+  float: left
+  height: 100px
+  display: flex
+  align-items: center
+
+
+.tablist__list
+  margin: 0
+  padding: 0 20px
+  list-style: none
+
+.tablist__list-item
+  margin: 5px 0
+  width: 220px
+  height: 20px
+  position: relative
+  border-bottom: 1px dashed rgba(0, 0, 0, .2)
+
+.tablist__span-name
+  position: absolute
+  left: 0
+
+.tablist__span-value
+  position: absolute
+  right: 0
+
+
+@keyframes playerInfoShow
+  0%
+    transform: scale(0.8)
+
+  100%
+    transform: scale(1)
